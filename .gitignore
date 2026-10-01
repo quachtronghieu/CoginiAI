@@ -1,0 +1,49 @@
+# Local secrets and machine-specific configuration
+**/.env
+!**/.env.example
+*.pem
+*.key
+*.p12
+
+# Python environments and caches
+.venv/
+**/.venv/
+**/.venv-*/
+__pycache__/
+**/__pycache__/
+.pytest_cache/
+*.py[cod]
+
+# Runtime logs, recordings, and diagnostics
+logs/
+**/logs/
+*.wav
+
+# Downloaded/local AI models (large files; install separately)
+**/models/
+*.onnx
+*.bin
+*.gguf
+*.pt
+*.safetensors
+
+# ESP-IDF generated output and local configuration
+xiaozhi-esp32/build/
+xiaozhi-esp32/managed_components/
+xiaozhi-esp32/sdkconfig
+xiaozhi-esp32/sdkconfig.old
+
+# Local RAG databases and SQLite temporary files
+rag-tools/cuisine_v2.sqlite3
+*.sqlite3-shm
+*.sqlite3-wal
+
+# Editors and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak

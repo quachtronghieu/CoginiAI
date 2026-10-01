@@ -1,0 +1,225 @@
+[
+  {
+    "place": "Lai Châu",
+    "topics": [
+      "ingredients",
+      "taste",
+      "how_to_eat"
+    ],
+    "url": "https://dulichlaichau.vn/index.php/item/1537",
+    "status": "rejected",
+    "error": "article body is too short"
+  },
+  {
+    "place": "Sơn La",
+    "topics": [
+      "taste"
+    ],
+    "url": "https://thongtindoingoai.sonla.gov.vn/content-181-am-thuc-dan-toc-thai-ndash-suc-hut-cua-du-lich-son-la.html",
+    "status": "rejected",
+    "error": "Client error '404 Not Found' for url 'https://thongtindoingoai.sonla.gov.vn/content-181-am-thuc-dan-toc-thai-ndash-suc-hut-cua-du-lich-son-la.html'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404"
+  },
+  {
+    "place": "Lạng Sơn",
+    "topics": [
+      "origin",
+      "ingredients",
+      "taste"
+    ],
+    "url": "https://lspa.langson.gov.vn/am-thuc/khau-nhuc-339226",
+    "status": "rejected",
+    "error": "article body is too short"
+  },
+  {
+    "place": "Quảng Ninh",
+    "topics": [
+      "taste"
+    ],
+    "url": "https://www.quangninh.gov.vn/chuyen-de/nongthonmoi/Trang/ChiTietTinTuc.aspx?nid=134802",
+    "status": "rejected",
+    "error": "article body is too short"
+  },
+  {
+    "place": "Cao Bằng",
+    "topics": [
+      "breakfast",
+      "ingredients",
+      "taste",
+      "how_to_eat"
+    ],
+    "url": "https://baocaobang.vn/banh-cuon-cao-bang-huong-vi-gian-di-niu-chan-thuc-khach-3187566.html",
+    "status": "robots_denied"
+  },
+  {
+    "place": "Phú Thọ",
+    "dishes": [
+      "bánh tai",
+      "bánh cuốn"
+    ],
+    "topics": [
+      "breakfast",
+      "ingredients",
+      "taste",
+      "how_to_eat",
+      "price"
+    ],
+    "url": "https://baophutho.vn/am-thuc-thi-xa-232825.htm",
+    "status": "saved",
+    "file": "rag-tools\\supplemental\\articles_vietnam\\am-thuc-thi-xa-90437bc84138.md",
+    "title": "Ẩm thực thị xã"
+  },
+  {
+    "place": "Quảng Ngãi",
+    "topics": [
+      "breakfast",
+      "ingredients",
+      "taste",
+      "price"
+    ],
+    "url": "https://baoquangngai.vn/channel/2047/202005/chao-long-banh-hoi-3004983/",
+    "status": "robots_denied"
+  },
+  {
+    "place": "Lai Châu",
+    "dishes": [
+      "pa pỉn tộp",
+      "pa pỉn lạp"
+    ],
+    "topics": [
+      "ingredients",
+      "taste"
+    ],
+    "url": "https://baolaichau.vn/van-hoa/am-thuc-cu-dan-toc-thai",
+    "status": "saved",
+    "file": "rag-tools\\supplemental\\articles_vietnam\\am-thuc-cua-dan-toc-thai-bao-lai-chau-ien-tu-eaa83820a202.md",
+    "title": "Ẩm thực của dân tộc Thái | Báo Lai Châu điện tử"
+  },
+  {
+    "place": "Sơn La",
+    "dishes": [
+      "xôi ngũ sắc"
+    ],
+    "topics": [
+      "ingredients",
+      "taste"
+    ],
+    "url": "https://baosonla.vn/du-lich-am-thuc/nhung-mon-xoi-dong-day-yeu-thuong-37563.html",
+    "status": "rejected",
+    "error": "place 'Sơn La' is not supported by the page"
+  },
+  {
+    "place": "Sơn La",
+    "dishes": [
+      "thịt trâu gác bếp"
+    ],
+    "topics": [
+      "ingredients",
+      "taste",
+      "how_to_eat"
+    ],
+    "url": "https://baosonla.vn/vi/bai-viet/thit-trau-gac-bep-hoa-xuan-28759",
+    "status": "saved",
+    "file": "rag-tools\\supplemental\\articles_vietnam\\thit-trau-gac-bep-hoa-xuan-917a90dd90a1.md",
+    "title": "Thịt trâu gác bếp Hoa Xuân"
+  },
+  {
+    "place": "Lạng Sơn",
+    "dishes": [
+      "bánh cuốn tráng khay"
+    ],
+    "topics": [
+      "breakfast",
+      "ingredients",
+      "taste",
+      "how_to_eat"
+    ],
+    "url": "https://baolangson.vn/dam-da-huong-vi-truyen-thong-banh-cuon-trang-khay-1528334.html",
+    "status": "robots_denied"
+  },
+  {
+    "place": "Lạng Sơn",
+    "dishes": [
+      "bánh cuốn trứng"
+    ],
+    "topics": [
+      "breakfast",
+      "ingredients",
+      "taste",
+      "how_to_eat"
+    ],
+    "url": "https://baolangson.vn/hap-dan-banh-cuon-trung-lang-son-1467193.html",
+    "status": "robots_denied"
+  },
+  {
+    "place": "Quảng Ninh",
+    "dishes": [
+      "rươi Đông Triều",
+      "cua Quảng Yên",
+      "chả mực Hạ Long",
+      "phở xào Bình Liêu"
+    ],
+    "topics": [],
+    "url": "https://baoquangninh.vn/phat-huy-gia-tri-van-hoa-am-thuc-vung-mien-quang-ninh-3257070.html",
+    "status": "rejected",
+    "error": "missing expected dishes: rươi Đông Triều, cua Quảng Yên, chả mực Hạ Long, phở xào Bình Liêu"
+  },
+  {
+    "place": "Cao Bằng",
+    "dishes": [
+      "bánh cuốn Cao Bằng"
+    ],
+    "topics": [
+      "breakfast",
+      "ingredients",
+      "taste",
+      "how_to_eat"
+    ],
+    "url": "https://nongthon.vietnamtourism.gov.vn/thuc-qua-sang-niu-chan-du-khach-o-cao-bang/",
+    "status": "saved",
+    "file": "rag-tools\\supplemental\\articles_vietnam\\thuc-qua-sang-niu-chan-du-khach-o-cao-bang-fcb388000f7f.md",
+    "title": "Thức quà sáng níu chân du khách ở Cao Bằng"
+  },
+  {
+    "place": "Lạng Sơn",
+    "dishes": [
+      "bánh cuốn trứng"
+    ],
+    "topics": [
+      "breakfast",
+      "taste",
+      "how_to_eat"
+    ],
+    "url": "https://thanhnien.vn/ngon-mem-moi-banh-cuon-trung-xu-lang-185572157.htm",
+    "status": "saved",
+    "file": "rag-tools\\supplemental\\articles_vietnam\\ngon-mem-moi-banh-cuon-trung-xu-lang-7a525e1866a3.md",
+    "title": "Ngon mềm môi bánh cuốn trứng xứ Lạng"
+  },
+  {
+    "place": "Biên Hòa",
+    "dishes": [
+      "bánh canh ngọt"
+    ],
+    "topics": [
+      "breakfast",
+      "taste",
+      "price"
+    ],
+    "url": "https://baodongnai.com.vn/tin-moi/202502/banh-canh-ngot-cho-bien-hoa-mon-an-tuoi-tho-gay-thuong-nho-d45105c/?v=1.1",
+    "status": "saved",
+    "file": "rag-tools\\supplemental\\articles_vietnam\\banh-canh-ngot-cho-bien-hoa-mon-an-tuoi-tho-gay-thuong-nho-281442dad4e0.md",
+    "title": "Bánh canh ngọt chợ Biên Hòa, món ăn tuổi thơ gây thương nhớ"
+  },
+  {
+    "place": "Lai Châu",
+    "dishes": [
+      "gạo dâu"
+    ],
+    "topics": [
+      "breakfast"
+    ],
+    "url": "https://dulich.laichau.gov.vn/vi/blog/details/gao-dau-dac-san-vung-bien-cuong-557",
+    "status": "saved",
+    "file": "rag-tools\\supplemental\\articles_vietnam\\gao-dau-ac-san-vung-bien-cuong-4d2afabc77b9.md",
+    "title": "Gạo dâu - đặc sản vùng biên cương"
+  }
+]

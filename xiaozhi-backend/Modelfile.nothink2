@@ -1,0 +1,25 @@
+﻿FROM qwen3:4b
+
+# Override system prefix để inject /no_think trực tiếp vào prompt đầu tiên
+SYSTEM ""
+
+TEMPLATE """{{- range .Messages }}
+{{- if eq .Role "system" }}<|im_start|>system
+{{ .Content }}<|im_end|>
+{{ else if eq .Role "user" }}<|im_start|>user
+{{ .Content }}<|im_end|>
+<|im_start|>assistant<think>
+
+</think>
+{{ else if eq .Role "assistant" }}<|im_start|>assistant
+{{ .Content }}<|im_end|>
+{{ end }}
+{{- end }}<|im_start|>assistant
+"""
+
+PARAMETER temperature 0.2
+PARAMETER top_k 20
+PARAMETER top_p 0.95
+PARAMETER repeat_penalty 1.0
+PARAMETER stop <|im_start|>
+PARAMETER stop <|im_end|>

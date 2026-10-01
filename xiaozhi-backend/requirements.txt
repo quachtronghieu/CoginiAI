@@ -1,0 +1,12 @@
+fastapi>=0.115,<1
+av>=18,<19
+faster-whisper>=1.2,<2
+httpx>=0.28,<1
+numpy>=2,<3
+piper-tts>=1.7,<2
+pyrnnoise>=0.4.5,<0.5
+pytest>=8,<9
+python-dotenv>=1,<2
+silero-vad>=6.2,<7
+uvicorn[standard]>=0.34,<1
+edge-tts>=7.0.0

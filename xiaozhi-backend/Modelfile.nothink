@@ -1,0 +1,8 @@
+﻿FROM qwen3:4b
+PARAMETER thinking_budget 0
+PARAMETER temperature 0.2
+PARAMETER top_k 20
+PARAMETER top_p 0.95
+PARAMETER repeat_penalty 1
+PARAMETER stop <|im_start|>
+PARAMETER stop <|im_end|>

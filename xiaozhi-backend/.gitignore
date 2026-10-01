@@ -1,0 +1,12 @@
+__pycache__/
+.pytest_cache/
+.venv/
+.env
+*.pyc
+models/
+*.bin
+*.gguf
+*.onnx
+*.pt
+*.safetensors
+logs/
