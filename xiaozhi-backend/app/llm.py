@@ -13,7 +13,7 @@ from .allergy import CustomerProfile
 from .ai import AiPipelineError, AiUnavailableError
 from .config import Settings
 from .rag import CuisineRagService
-from .dialogue import is_recommendation, prepare_turn, regions_in_text, response_language, courtesy_or_domain_reply
+from .dialogue import is_recommendation, prepare_turn, regions_in_text, response_language, courtesy_or_domain_reply, has_location_request
 from .grounding import evidence_passages
 from .menu import VerifiedMenuService
 
@@ -142,6 +142,9 @@ def _append_allergy_warning(
 
 
 def _menu_unavailable(profile: CustomerProfile, language: str) -> str:
+    if profile.allergy_review_deferred:
+        return ("Your complete allergy list is unconfirmed; this is general dish information, not an allergy-safe recommendation. Please check ingredients and cross-contact with staff."
+                if language == "en" else "Danh sách dị ứng chưa được xác nhận đầy đủ; đây chỉ là thông tin về món ăn, chưa phải đề xuất phù hợp với dị ứng. Bạn cần nhờ nhân viên kiểm tra thành phần và nguy cơ nhiễm chéo.")
     labels = profile.spoken_allergens()
     if language == "en":
         return f"I cannot identify dishes suitable for your confirmed allergies ({labels}) without verified ingredients and cross-contact data. Please ask restaurant staff to check."
@@ -225,13 +228,16 @@ class OllamaLlmService:
                 logger.info("Dialogue reply=%r region=%s", reply, customer_profile.region)
                 return reply
             customer_profile.resolved_request = transcript
+            if customer_profile.allergy_review_deferred and not self.settings.rag_enabled:
+                customer_profile.last_route = "allergy_unconfirmed"
+                return _menu_unavailable(customer_profile, language)
             if customer_profile.allergy_status == "declared":
                 allergy_suitability = bool(re.search(
                     r"an toàn|phù hợp.*dị ứng|không (?:chứa|gây).*dị ứng|không chứa|allergy.safe|safe for|allergen.free",
                     transcript, re.I,
                 ))
                 if not self.settings.rag_enabled or is_recommendation(transcript) or allergy_suitability:
-                    menu_items = self.menu.candidates(customer_profile, transcript)
+                    menu_items = [] if customer_profile.allergy_review_deferred else self.menu.candidates(customer_profile, transcript)
                     if menu_items:
                         customer_profile.last_route = "verified_menu"
                         return self.menu.spoken_answer(menu_items, customer_profile, language)
@@ -441,10 +447,12 @@ class OllamaLlmService:
         fallback = ("The knowledge base does not currently contain enough verified information to answer this question." if language == "en" else "Kho dữ liệu hiện chưa có đủ thông tin để trả lời câu hỏi này.")
         recommendation = is_recommendation(question)
         locations = regions_in_text(question)
+        if len(locations) > 1 or (not locations and has_location_request(question)):
+            return ("Which city or region do you mean? Please repeat the location." if language == "en" else "Bạn muốn tìm món ở tỉnh hoặc thành phố nào? Mình chưa nghe rõ địa điểm.")
         region = locations[0] if len(locations) == 1 else ""
         if recommendation and profile is not None and profile.region:
             region = profile.region
-        information_only = profile is not None and profile.allergy_status == "declared"
+        information_only = profile is not None and (profile.allergy_status == "declared" or profile.allergy_review_deferred)
         if recommendation and region:
             meal = "breakfast " if "breakfast" in question.lower() else ""
             if language == "vi":
@@ -481,7 +489,7 @@ class OllamaLlmService:
             "model": self.settings.llm_model, "think": False, "stream": False, "keep_alive": -1,
             "format": schema,
             "messages": [{"role": "system", "content": prompt}, {"role": "user", "content": "\n\n".join(f"BẰNG CHỨNG {index} (TÀI LIỆU: {item.title}): {item.text}" for index, item in enumerate(evidence, 1)) + f"\n\nCÂU HỎI: {question}"}],
-            "options": {"temperature": 0, "num_ctx": self.settings.llm_num_ctx, "num_predict": self.settings.llm_num_predict},
+            "options": {"temperature": 0, "num_ctx": self.settings.llm_num_ctx, "num_predict": min(self.settings.llm_num_predict, 128)},
         }
         try:
             async with httpx.AsyncClient(timeout=self.settings.llm_timeout_seconds, transport=self.transport) as client:
@@ -527,6 +535,8 @@ class OllamaLlmService:
             answer += (" Current prices, opening hours and availability must be checked with the restaurant." if language == "en" else " Giá, giờ mở cửa và tình trạng còn món hiện tại cần hỏi lại nhà hàng.")
         if language == "en":
             answer = "The verified source passages below are in Vietnamese; an independently checked English translation is not available yet. " + answer
-        if profile is not None and profile.allergy_status == "declared":
+        if profile is not None and profile.allergy_review_deferred:
+            answer += " " + _menu_unavailable(profile, language)
+        elif profile is not None and profile.allergy_status == "declared":
             answer = _append_allergy_warning(answer, profile, language)
         return answer

@@ -85,11 +85,13 @@ class Settings:
     asr_min_duration_seconds: float = 0.15
     diagnostics_enabled: bool = False
     diagnostics_slots: int = 24
-    rnnoise_asr_mode: str = "filtered"
+    rnnoise_asr_mode: str = "raw"
     vad_strong_speech_ms: int = 250
     asr_no_speech_gate_probability: float = 0.60
     verified_menu_path: str = ""
     verified_menu_max_age_days: int = 30
+    tts_warmup_enabled: bool = True
+    tts_sentence_streaming: bool = True
 
 
 @lru_cache
@@ -101,7 +103,7 @@ def get_settings() -> Settings:
     tts_default_language = os.getenv("TTS_DEFAULT_LANGUAGE", "vi").lower().strip()
     if tts_default_language not in VALID_TTS_DEFAULT_LANGUAGES:
         raise ValueError("TTS_DEFAULT_LANGUAGE must be one of: en, vi")
-    rnnoise_asr_mode = os.getenv("RNNOISE_ASR_MODE", "filtered").lower().strip()
+    rnnoise_asr_mode = os.getenv("RNNOISE_ASR_MODE", "raw").lower().strip()
     if rnnoise_asr_mode not in VALID_RNNOISE_ASR_MODES:
         raise ValueError("RNNOISE_ASR_MODE must be one of: filtered, raw, shadow")
 
@@ -150,12 +152,12 @@ def get_settings() -> Settings:
         model_device=model_device,
         vad_enabled=os.getenv("VAD_ENABLED", "false").lower()
         in {"1", "true", "yes", "on"},
-        vad_threshold=float(os.getenv("VAD_THRESHOLD", "0.4")),
-        vad_min_silence_ms=_positive_int("VAD_MIN_SILENCE_MS", 500),
+        vad_threshold=_probability("VAD_THRESHOLD", 0.6),
+        vad_min_silence_ms=_positive_int("VAD_MIN_SILENCE_MS", 1000),
         vad_speech_pad_ms=_positive_int("VAD_SPEECH_PAD_MS", 200),
         max_audio_seconds=_positive_int("MAX_AUDIO_SECONDS", 30),
         max_audio_bytes=_positive_int("MAX_AUDIO_BYTES", 2 * 1024 * 1024),
-        auto_stop_timeout_seconds=_positive_float("AUTO_STOP_TIMEOUT_SECONDS", 4.0),
+        auto_stop_timeout_seconds=_positive_float("AUTO_STOP_TIMEOUT_SECONDS", 6.0),
         hello_timeout_seconds=_positive_float("HELLO_TIMEOUT_SECONDS", 10.0),
         asr_hotwords=os.getenv("ASR_HOTWORDS", Settings.asr_hotwords).strip(),
         asr_min_rms=_positive_float("ASR_MIN_RMS", 0.0015),
@@ -169,4 +171,6 @@ def get_settings() -> Settings:
         ),
         verified_menu_path=os.getenv("VERIFIED_MENU_PATH", "").strip(),
         verified_menu_max_age_days=_positive_int("VERIFIED_MENU_MAX_AGE_DAYS", 30),
+        tts_warmup_enabled=os.getenv("TTS_WARMUP_ENABLED", "true").lower() in {"1", "true", "yes", "on"},
+        tts_sentence_streaming=os.getenv("TTS_SENTENCE_STREAMING", "true").lower() in {"1", "true", "yes", "on"},
     )

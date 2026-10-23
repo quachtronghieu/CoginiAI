@@ -66,9 +66,20 @@ MODEL_DEVICE=auto
 
 Default Hugging Face cache is under the current Windows user cache directory. `MODEL_DEVICE=auto` selects CUDA through CTranslate2 when available, otherwise CPU. CPU defaults to `int8`; CUDA defaults to `float16`.
 
-Blank `ASR_LANGUAGE` enables Whisper automatic language detection. Transcript text is the primary language signal. Whisper language is only a secondary hint when its probability is at least `LANGUAGE_HINT_MIN_PROBABILITY` (default `0.80`).
+Blank `ASR_LANGUAGE` uses the selected VI/EN session language when present;
+only a fresh session without a language uses automatic detection. Explicit
+`ASR_LANGUAGE` remains an operator override. Transcript text is the primary
+response-language signal. Forced-language results expose zero detection
+confidence; the model's original value is retained separately as
+`reported_language_probability` in candidate diagnostics.
 
-If automatic detection is low-confidence, outside Vietnamese/English, or returns incompatible Cyrillic text, backend retries that utterance with `language=en` and `language=vi`. It selects the best valid result from language confidence, segment log probability, and no-speech probability. This does not lock later utterances to either language. Empty/noise transcripts are logged and ignored without sending a visible alert.
+If automatic detection is low-confidence, outside Vietnamese/English, or returns
+incompatible Cyrillic text, backend retries with `language=en` and `language=vi`.
+Candidates are ranked by segment log probability minus no-speech probability;
+accents and language identification probability add no selection bonus. A
+selected session language avoids cross-language retries. Hotwords are supplied
+only for the pending allergy/confirmation question; an empty context does not
+reactivate the global list. Empty/noise transcripts are logged and ignored.
 
 ## LLM: local Ollama/Gemma
 
@@ -183,7 +194,19 @@ WebSocket audio frames are paced at their configured frame duration. Backend sen
 
 ## RNNoise microphone suppression
 
-RNNoise has three routing modes. During comparison, use `shadow`: raw audio
+Daily use defaults to raw audio and a single ASR service request per utterance:
+
+```env
+RNNOISE_ENABLED=false
+RNNOISE_ASR_MODE=raw
+```
+
+Raw mode bypasses RNNoise processing and comparison, even if an old environment
+still sets `RNNOISE_ENABLED=true`. It saves raw WAV/JSON when diagnostics are
+enabled; it does not create a misleading duplicate `-rnnoise.wav`. Existing
+language/safety retries inside the ASR adapter can still run when needed.
+
+RNNoise has three routing modes. During a separate comparison, use `shadow`: raw audio
 drives VAD, Whisper, language selection and the conversation; RNNoise is still
 run and transcribed with the same Whisper service only for diagnostics.
 
@@ -203,11 +226,19 @@ library is loaded and active.
 
 `RNNOISE_ASR_MODE=filtered` restores RNNoise before VAD/Whisper.
 `RNNOISE_ASR_MODE=raw` uses only raw audio for recognition. In `shadow` mode,
-the RNNoise result cannot change the response or customer profile.
+the RNNoise result cannot change the response or customer profile. Shadow runs
+the ASR service twice and waits for both results, increasing response time.
+See [AUDIO_MODES.md](AUDIO_MODES.md) for daily use, explicit shadow testing,
+turbo trials and rollback to small.
 
 ### Controlled 24-sample voice comparison
 
 Start the prepared matrix (four exact phrases, quiet/normal/motor, two repeats):
+
+First enable the shadow settings above and restart the backend. The benchmark
+commands below use `logs/voice`; an isolated `run_asr_trial` instead writes to
+its own directory. Planned sentences must be checked against the actual WAV
+before treating them as verified references; extra replies can shift labels.
 
 ```powershell
 python scripts\voice_benchmark.py begin
@@ -235,13 +266,22 @@ Silero loads once; each WebSocket gets isolated iterator and Opus decoder state.
 
 ```env
 VAD_ENABLED=true
-VAD_THRESHOLD=0.4
-VAD_MIN_SILENCE_MS=500
+VAD_THRESHOLD=0.6
+VAD_STRONG_SPEECH_MS=250
+ASR_NO_SPEECH_GATE_PROBABILITY=0.60
+VAD_MIN_SILENCE_MS=1000
 VAD_SPEECH_PAD_MS=200
 MAX_AUDIO_SECONDS=30
 MAX_AUDIO_BYTES=2097152
-AUTO_STOP_TIMEOUT_SECONDS=4
+AUTO_STOP_TIMEOUT_SECONDS=6
 ```
+
+These are the current baseline, shared by code defaults and `.env.example`.
+Validate quiet speech for each microphone/distance before changing the VAD
+threshold. Explicit `speech_detected=false` rejects the utterance before ASR,
+dialogue and TTS. Short speech is not rejected solely for its duration: the
+secondary gate combines weak VAD evidence with high ASR no-speech probability.
+ASR transcription errors should not be addressed by raising the VAD threshold.
 
 ## Run
 
@@ -302,6 +342,11 @@ Ambiguous observed locations such as `Cà Mèo` / `Camel` or `Hồ Chị` requir
 confirmation. Unknown locations are not silently mapped. Region-constrained
 retrieval requires the article title to explicitly concern that location.
 Breakfast recommendations require explicit breakfast evidence.
+
+List requests such as `những món ăn ở ...` remain recommendations even if ASR
+damages the opening verb. An unrecognized place after a location marker asks
+for clarification and cannot fall back to unscoped RAG or the previous city.
+The RAG entry point also guards unresolved places when no session is supplied.
 
 In RAG mode, the configured LLM selects IDs of complete source passages using a structured JSON
 response. Only backend-selected source text reaches TTS; free model claims and
@@ -372,7 +417,7 @@ unparsed ingredient words are named and require a complete-list clarification,
 not silently discarded or corrected. Vietnamese tone collisions such as `của`
 vs `cua`, `cả` vs `cá` and `đừng` vs `đúng` are not confirmations/ingredient aliases.
 
-RNNoise output is compared with raw speech during allergy onboarding/readback.
+In explicit `filtered` mode, RNNoise output is compared with raw speech during allergy onboarding/readback.
 Different complete lists or a possible missing ingredient cause clarification.
 Disagreeing yes/no recordings cannot commit a list. A clear raw `sữa` can rescue
 a damaged filtered word, but the entire list STILL needs human confirmation.
@@ -380,11 +425,20 @@ Uncertain short courtesy phrases also have a limited raw-audio fallback. ASR
 hotwords depend on dialogue phase; repetitive hotword hallucinations retry once
 without hints, then are rejected if still invalid. This is not a guarantee of
 accurate recognition: both recordings can miss the same word, so users must
-listen to the complete readback and reject it when incomplete.
+listen to the complete readback and reject it when incomplete. Daily `raw` mode
+uses the raw transcript and still requires readback confirmation; `shadow`
+records the second transcript without letting it alter the conversation.
 
 Set `VOICE_DIAGNOSTICS_ENABLED=true` to keep rotating `logs/voice-session.log`
-and at most 12 raw/RNNoise WAV pairs of nonempty accepted speech under `logs/voice/`.
-Idle silence no longer overwrites the speech samples. Conversation logs include
+and up to `VOICE_DIAGNOSTICS_SLOTS` samples (default 24) under `logs/voice/`.
+Raw is saved before filtering or ASR, including VAD-rejected silence. Raw mode
+saves raw WAV/JSON only; shadow adds the RNNoise WAV and both ASR results.
+ASR metadata includes every candidate, actual hotwords, forced/auto language,
+reported versus effective language probability, acoustic metrics and score.
+Completed samples include per-stage `timings_ms`, answer, region, route and
+sources. Synthesis/encoding time excludes socket pacing and speaker playback.
+Samples rotate, so archive speaker-verified recordings before a slot is reused.
+Conversation logs include
 the original transcript, resolved request, route, language, allergens and selected
 source URLs, so physical-device tests can separate ASR from retrieval problems.
 These contain private

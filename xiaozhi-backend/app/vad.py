@@ -164,6 +164,7 @@ class SileroVadSession:
             else:
                 current = 0
         frame_ms = self.chunk_samples / self.settings.xiaozhi_input_sample_rate * 1000
+        last_speech_frame = max((index for index, value in enumerate(self.probabilities) if value >= threshold), default=-1)
         return {
             "available": True,
             "speech_detected": self.speech_started,
@@ -175,6 +176,8 @@ class SileroVadSession:
                 value >= threshold for value in self.probabilities
             ),
             "max_contiguous_speech_ms": longest * frame_ms,
+            "last_speech_end_audio_ms": (last_speech_frame + 1) * frame_ms if last_speech_frame >= 0 else None,
+            "trailing_non_speech_ms": (len(self.probabilities) - last_speech_frame - 1) * frame_ms if last_speech_frame >= 0 else None,
         }
 
     def reset(self) -> None:

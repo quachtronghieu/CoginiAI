@@ -148,8 +148,8 @@ class TracingAsrService(FasterWhisperAsrService):
         use_hotwords: bool = True,
     ) -> _TranscriptCandidate:
         actual_hotwords = (
-            (hotwords or self.settings.asr_hotwords)
-            if language != "en" and use_hotwords
+            hotwords
+            if language != "en" and use_hotwords and hotwords
             else None
         )
         candidate = super()._transcribe_candidate(

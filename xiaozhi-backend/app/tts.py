@@ -8,6 +8,7 @@ import io
 import re
 import threading
 import wave
+from collections import OrderedDict
 from pathlib import Path
 import logging
 from time import monotonic
@@ -24,6 +25,9 @@ class PiperTtsService:
         self.settings = settings
         self._voices: dict[str, object] = {}
         self._lock = threading.Lock()
+        self._synthesis_lock = threading.Lock()
+        self._audio_cache: OrderedDict[tuple[str, str], PcmAudio] = OrderedDict()
+        self._cache_bytes = 0
 
     def available(self) -> bool:
         return self.health()["tts"]
@@ -65,6 +69,7 @@ class PiperTtsService:
         text: str,
         language: str,
         language_probability: float,
+        *, voice_language: str | None = None,
     ) -> PcmAudio:
         if not self.available():
             raise AiUnavailableError(
@@ -72,13 +77,13 @@ class PiperTtsService:
             )
         if not text.strip():
             raise ValueError("Cannot synthesize empty text")
-        selected_language = self.select_language(
+        selected_language = voice_language or self.select_language(
             text, language, language_probability
         )
         started = monotonic()
         try:
             return await asyncio.to_thread(
-                self._synthesize_sync, text, selected_language
+                self._cached_synthesize, text.strip(), selected_language
             )
         finally:
             logger.info(
@@ -86,6 +91,31 @@ class PiperTtsService:
                 (monotonic() - started) * 1000,
                 selected_language,
             )
+
+    def _cached_synthesize(self, text: str, language: str) -> PcmAudio:
+        # Serialize Piper access, including a prefetch finishing after cancellation.
+        # Cache exact audio only; never reuse a previous dialogue/RAG decision.
+        key = (language, text)
+        with self._synthesis_lock:
+            if key in self._audio_cache:
+                self._audio_cache.move_to_end(key)
+                return self._audio_cache[key]
+            audio = self._synthesize_sync(text, language)
+            if len(text) <= 260 and len(audio.data) <= 2 * 1024 * 1024:
+                self._audio_cache[key] = audio
+                self._cache_bytes += len(audio.data)
+                while len(self._audio_cache) > 32 or self._cache_bytes > 16 * 1024 * 1024:
+                    _, removed = self._audio_cache.popitem(last=False)
+                    self._cache_bytes -= len(removed.data)
+            return audio
+
+    async def warmup(self) -> None:
+        """Load configured voices and execute synthesis before accepting clients."""
+        languages = ("vi", "en") if self.settings.tts_model_vi or self.settings.tts_model_en else (self.settings.tts_default_language,)
+        for language in languages:
+            text = "Xin chào!" if language == "vi" else "Hello!"
+            await self.synthesize(text, language, 1.0)
+        logger.info("Piper warmup ready: languages=%s cache_entries=%d", languages, len(self._audio_cache))
 
     def select_language(
         self,
@@ -220,6 +250,7 @@ class EdgeTtsService:
         text: str,
         language: str,
         language_probability: float = 1.0,
+        *, voice_language: str | None = None,
     ) -> PcmAudio:
         if not self.available():
             raise AiUnavailableError("Edge-TTS is unavailable. Install edge-tts and av.")
@@ -227,7 +258,7 @@ class EdgeTtsService:
         if not cleaned:
             raise ValueError("Cannot synthesize empty text")
 
-        selected_lang = self.select_language(cleaned, language, language_probability)
+        selected_lang = voice_language or self.select_language(cleaned, language, language_probability)
         voice = self.voice_vi if selected_lang.startswith("vi") else self.voice_en
         started = monotonic()
         try:

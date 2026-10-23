@@ -4,6 +4,8 @@ import importlib.util
 import logging
 from time import monotonic
 from typing import Callable, Protocol
+from collections.abc import Awaitable
+from contextlib import suppress
 
 from .allergy import CustomerProfile
 from .config import Settings
@@ -51,6 +53,7 @@ class AsrResult:
     alternatives: tuple[str, ...] = ()
     clarification_reason: str = ""
     no_speech_probability: float = 0.0
+    candidates: tuple[dict, ...] = field(default=(), compare=False)
 
 
 @dataclass
@@ -61,6 +64,7 @@ class AiResponse:
     emotion: str = "neutral"
     language: str = ""
     language_probability: float = 0.0
+    diagnostic_key: str | None = field(default=None, compare=False, repr=False)
 
 
 class AudioCodecService(Protocol):
@@ -117,6 +121,7 @@ class AiPipeline(Protocol):
         on_transcript: Callable[[str], str] | None = None,
         customer_profile: CustomerProfile | None = None,
         vad_evidence: dict | None = None,
+        on_audio_chunk: Callable[[AiResponse], Awaitable[None]] | None = None,
     ) -> AiResponse: ...
 
     def health(self) -> dict[str, bool]: ...
@@ -140,7 +145,7 @@ class LocalAiPipeline:
         tts: TtsService,
         noise_suppressor: NoiseSuppressorService | None = None,
         diagnostics: VoiceDiagnostics | None = None,
-        rnnoise_asr_mode: str = "filtered",
+        rnnoise_asr_mode: str = "raw",
         vad_strong_speech_ms: int = 250,
         asr_no_speech_gate_probability: float = 0.60,
     ) -> None:
@@ -164,6 +169,7 @@ class LocalAiPipeline:
             "needs_clarification": result.needs_clarification,
             "clarification_reason": result.clarification_reason,
             "no_speech_probability": result.no_speech_probability,
+            "candidates": list(result.candidates),
         }
 
     def _weak_vad_and_asr(
@@ -196,11 +202,13 @@ class LocalAiPipeline:
         on_transcript: Callable[[str], str] | None = None,
         customer_profile: CustomerProfile | None = None,
         vad_evidence: dict | None = None,
+        on_audio_chunk: Callable[[AiResponse], Awaitable[None]] | None = None,
     ) -> AiResponse:
         started = monotonic()
         if not opus_frames:
             raise AiPipelineError("Cannot process an empty utterance")
         diagnostic_key = None
+        timings = {}
         try:
             raw_audio = await self.codec.decode_opus(opus_frames)
             if self.diagnostics is not None:
@@ -209,18 +217,21 @@ class LocalAiPipeline:
                     {
                         "input_opus_frames": len(opus_frames),
                         "vad": vad_evidence or {},
+                        "rnnoise_asr_mode": self.rnnoise_asr_mode,
                     },
                 )
 
-            filtered_audio = raw_audio
-            if self.noise_suppressor is not None:
+            filtered_audio = None
+            if self.rnnoise_asr_mode != "raw" and self.noise_suppressor is not None:
                 filtered_audio = await self.noise_suppressor.process(raw_audio)
-            if diagnostic_key is not None:
-                self.diagnostics.save_filtered(diagnostic_key, filtered_audio)
+                if diagnostic_key is not None:
+                    self.diagnostics.save_filtered(diagnostic_key, filtered_audio)
 
+            timings["audio_preparation"] = (monotonic() - started) * 1000
+            stage_started = monotonic()
             raw_result = None
             filtered_result = None
-            if self.rnnoise_asr_mode == "shadow" and self.noise_suppressor is not None:
+            if self.rnnoise_asr_mode == "shadow" and filtered_audio is not None:
                 raw_result = await self._transcribe(raw_audio, customer_profile)
                 filtered_result = await self._transcribe(filtered_audio, customer_profile)
                 asr_result = raw_result
@@ -230,7 +241,7 @@ class LocalAiPipeline:
                     raw_result.text.strip(),
                     filtered_result.text.strip(),
                 )
-            elif self.rnnoise_asr_mode == "raw":
+            elif filtered_audio is None:
                 raw_result = await self._transcribe(raw_audio, customer_profile)
                 asr_result = raw_result
             else:
@@ -241,13 +252,14 @@ class LocalAiPipeline:
                 )
                 asr_result = filtered_result
 
+            timings["asr"] = (monotonic() - stage_started) * 1000
             if diagnostic_key is not None:
                 self.diagnostics.update_result(
                     diagnostic_key,
                     status="asr_complete" if asr_result.text.strip() else "asr_rejected",
                     rejection_reason=None if asr_result.text.strip() else "empty_transcript",
                     asr={
-                        "primary_source": "raw" if self.rnnoise_asr_mode in {"raw", "shadow"} else "rnnoise",
+                        "primary_source": "raw" if raw_result is not None else "rnnoise",
                         "raw": self._asr_metadata(raw_result) if raw_result else None,
                         "rnnoise": self._asr_metadata(filtered_result) if filtered_result else None,
                     },
@@ -311,28 +323,88 @@ class LocalAiPipeline:
                 else:
                     raw_answer = "I heard different ingredient names. Please repeat your complete allergy list slowly." if language == "en" else "Mình nghe chưa thống nhất tên thành phần dị ứng. Bạn hãy nói chậm từng thành phần; mình sẽ đọc lại để bạn xác nhận."
             else:
+                stage_started = monotonic()
                 kwargs = supported_kwargs(self.llm.generate, {"history": history, "persona": persona, "customer_profile": customer_profile})
                 raw_answer = await self.llm.generate(
                     transcript, language, asr_result.language_probability,
                     asr_result.confidence, **kwargs,
                 )
+                timings["dialogue_rag_llm"] = (monotonic() - stage_started) * 1000
             answer = raw_answer.strip()
             if not answer:
                 raise AiPipelineError("LLM returned an empty response")
+            if diagnostic_key is not None:
+                self.diagnostics.update_result(
+                    diagnostic_key, answer=answer, delivery_status="rendering",
+                    region=customer_profile.region if customer_profile else "",
+                    route=customer_profile.last_route if customer_profile else "",
+                    sources=list(customer_profile.evidence_sources) if customer_profile else [],
+                )
 
-            output_audio = await self.tts.synthesize(
-                answer,
-                language,
-                asr_result.language_probability,
-            )
-            audio_frames = await self.codec.encode_opus(output_audio)
+            from .speech import speech_chunks
+            chunks = speech_chunks(answer) if on_audio_chunk is not None else [answer]
+            timings["tts"] = timings["encode"] = 0.0
+            select_voice = getattr(self.tts, "select_language", None)
+            voice_language = select_voice(answer, language, asr_result.language_probability) if select_voice is not None else language
+
+            async def render(chunk):
+                stage_started = monotonic()
+                output_audio = await self.tts.synthesize(chunk, language, asr_result.language_probability,
+                    **supported_kwargs(self.tts.synthesize, {"voice_language": voice_language}))
+                tts_ms = (monotonic() - stage_started) * 1000
+                stage_started = monotonic()
+                frames = await self.codec.encode_opus(output_audio)
+                return frames, tts_ms, (monotonic() - stage_started) * 1000
+
+            audio_frames = []
+            pending = asyncio.create_task(render(chunks[0]))
+            try:
+                for index, chunk in enumerate(chunks):
+                    frames, tts_ms, encode_ms = await pending
+                    timings["tts"] += tts_ms
+                    timings["encode"] += encode_ms
+                    # At most one sentence is prefetched while the current
+                    # sentence is paced to the device. Abort cancels the task.
+                    pending = asyncio.create_task(render(chunks[index + 1])) if index + 1 < len(chunks) else None
+                    if index == 0:
+                        timings["first_audio_ready"] = (monotonic() - started) * 1000
+                    if on_audio_chunk is not None:
+                        await on_audio_chunk(AiResponse(
+                            transcript=transcript, answer=chunk, audio_frames=frames,
+                            language=language, language_probability=asr_result.language_probability,
+                            diagnostic_key=diagnostic_key,
+                        ))
+                    else:
+                        audio_frames.extend(frames)
+            finally:
+                if pending is not None:
+                    pending.cancel()
+                    with suppress(asyncio.CancelledError, Exception):
+                        await pending
+            timings["total"] = (monotonic() - started) * 1000
+            if diagnostic_key is not None:
+                self.diagnostics.update_result(
+                    diagnostic_key,
+                    timings_ms={name: round(value, 2) for name, value in timings.items()},
+                    answer=answer,
+                    region=customer_profile.region if customer_profile else "",
+                    route=customer_profile.last_route if customer_profile else "",
+                    sources=list(customer_profile.evidence_sources) if customer_profile else [],
+                    sentence_streaming=on_audio_chunk is not None,
+                    delivery_status="audio_sent" if on_audio_chunk is not None else "audio_ready",
+                )
             return AiResponse(
                 transcript=transcript,
                 answer=answer,
                 audio_frames=audio_frames,
                 language=language,
                 language_probability=asr_result.language_probability,
+                diagnostic_key=diagnostic_key,
             )
+        except asyncio.CancelledError:
+            if diagnostic_key is not None:
+                self.diagnostics.update_result(diagnostic_key, delivery_status="cancelled")
+            raise
         except Exception as exc:
             if diagnostic_key is not None and not isinstance(
                 exc, (EmptyUtteranceError, NonSpeechUtteranceError)
@@ -363,12 +435,12 @@ class LocalAiPipeline:
                 {
                     "input_opus_frames": len(opus_frames),
                     "vad": vad_evidence or {},
+                    "rnnoise_asr_mode": self.rnnoise_asr_mode,
                 },
             )
-            filtered_audio = raw_audio
-            if self.noise_suppressor is not None:
+            if self.rnnoise_asr_mode != "raw" and self.noise_suppressor is not None:
                 filtered_audio = await self.noise_suppressor.process(raw_audio)
-            self.diagnostics.save_filtered(key, filtered_audio)
+                self.diagnostics.save_filtered(key, filtered_audio)
             self.diagnostics.update_result(
                 key,
                 status="vad_rejected",
@@ -471,7 +543,11 @@ def build_ai_pipeline(settings: Settings) -> AiPipeline:
     from .tts import PiperTtsService, create_tts_service
 
     tts = create_tts_service(settings)
-    noise_suppressor = RnnoiseNoiseSuppressor(settings)
+    noise_suppressor = (
+        RnnoiseNoiseSuppressor(settings)
+        if settings.rnnoise_enabled and settings.rnnoise_asr_mode != "raw"
+        else None
+    )
     tts_health = tts.health()
     component_health = {
         "codec": bool(
@@ -479,7 +555,7 @@ def build_ai_pipeline(settings: Settings) -> AiPipeline:
         ),
         "asr": bool(settings.asr_model and importlib.util.find_spec("faster_whisper")),
         "llm": bool(settings.llm_base_url and settings.llm_model),
-        "rnnoise": noise_suppressor.available(),
+        "rnnoise": bool(noise_suppressor and noise_suppressor.available()),
         "rag": CuisineRagService(settings).available(),
         **tts_health,
     }
@@ -490,7 +566,9 @@ def build_ai_pipeline(settings: Settings) -> AiPipeline:
             settings.llm_base_url,
             settings.llm_model,
             tts_configured,
-            not settings.rnnoise_enabled or noise_suppressor.available(),
+            not settings.rnnoise_enabled
+            or settings.rnnoise_asr_mode == "raw"
+            or component_health["rnnoise"],
         ]
     )
     if not configured_models:

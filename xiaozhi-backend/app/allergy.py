@@ -153,6 +153,7 @@ class CustomerProfile:
     dialogue_action: str = ""
     allergy_confirmation_attempts: int = 0
     allergy_unclear_attempts: int = 0
+    allergy_review_deferred: bool = False
     awaiting_food_request: bool = False
 
     def reset(self) -> None:
@@ -180,6 +181,7 @@ class CustomerProfile:
         self.dialogue_action = ""
         self.allergy_confirmation_attempts = 0
         self.allergy_unclear_attempts = 0
+        self.allergy_review_deferred = False
         self.awaiting_food_request = False
 
     def update_from_text(self, text: str) -> bool:
@@ -201,6 +203,8 @@ class CustomerProfile:
                 self.pending_allergy_note = ""
                 self.allergy_question_asked = False
                 self.allergy_updated_this_turn = True
+                self.allergy_review_deferred = False
+                self.allergy_unclear_attempts = 0
                 self.turn_consumed = True
                 self.allergy_confirmation_attempts = 0
                 self.allergy_name_missing = False

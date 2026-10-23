@@ -14,6 +14,55 @@ from app.grounding import evidence_passages
 from app.rag import RagMatch
 
 
+@pytest.mark.parametrize("status", ["unknown", "none"])
+@pytest.mark.parametrize("text", [
+    "Gể cho tôi những món ăn ở Đà Lạc",
+    "Vậy ý cho tôi những món ăn ở Đà Lạc",
+    "Những món ăn ở Xyzville",
+    "Món phở ở Xyzville có thành phần gì?",
+])
+def test_damaged_location_blocks_unscoped_retrieval(text, status):
+    profile = CustomerProfile(allergy_status=status, region="Hải Phòng")
+    reply, _ = prepare_turn(profile, text, "vi")
+    assert "chưa nghe rõ địa điểm" in reply
+    assert profile.region_needs_clarification
+    assert profile.region == "Hải Phòng"  # Do not silently map to another place.
+    assert profile.dialogue_action == "location_clarification"
+    reply, resolved = prepare_turn(profile, "Đà Lạt", "vi")
+    if status == "none":
+        assert reply is None
+        assert regions_in_text(resolved) == ["Đà Lạt"]
+        assert "Đà Lạc" not in resolved and "Xyzville" not in resolved
+    assert profile.region == "Đà Lạt"
+
+
+def test_unknown_place_never_calls_rag_or_ollama_without_profile(monkeypatch):
+    service = OllamaLlmService(replace(get_settings(), rag_enabled=True))
+    monkeypatch.setattr(service.rag, "available", lambda: True)
+    monkeypatch.setattr(service.rag, "retrieve", lambda *args, **kwargs: pytest.fail("Unresolved location reached RAG"))
+    answer = asyncio.run(service.generate("Vậy ý cho tôi những món ăn ở Đà Lạc", "vi", .9))
+    assert "chưa nghe rõ địa điểm" in answer
+
+
+def test_unknown_english_location_requires_repeat_before_retrieval():
+    profile = CustomerProfile(allergy_status="none", response_language="en")
+    reply, _ = prepare_turn(profile, "Suggest food in Xyzville", "en")
+    assert "repeat the location" in reply
+    reply, resolved = prepare_turn(profile, "Nha Trang", "en")
+    assert reply is None and "Xyzville" not in resolved
+    assert profile.region == "Nha Trang"
+
+
+@pytest.mark.parametrize("text", [
+    "Món này có nguồn gốc ở đâu?", "Gợi ý món ăn nấu tại nhà",
+    "Món ăn có tinh bột không?", "Tại sao phở ngon?",
+])
+def test_non_place_phrases_do_not_trigger_location_clarification(text):
+    profile = CustomerProfile(allergy_status="none")
+    prepare_turn(profile, text, "vi")
+    assert not profile.region_needs_clarification
+
+
 @pytest.mark.parametrize("noise", ["Xin chào tạm biệt, tạm biệt.", "Thật đẹp", "Cây hít cho tòi mộng sâu máu"])
 def test_noise_cannot_replace_pending_breakfast_request(noise):
     profile = CustomerProfile(allergy_status="none")

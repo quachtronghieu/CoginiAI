@@ -58,6 +58,20 @@ def test_vad_state_isolated_per_session() -> None:
     assert second.should_finalize(b"frame", 0.1) is False
 
 
+@pytest.mark.parametrize("mode", ["raw", "shadow"])
+def test_raw_and_shadow_vad_never_filter_microphone_audio(monkeypatch, mode):
+    import app.noise as noise_module
+
+    def forbidden_filter(*args, **kwargs):
+        pytest.fail("RNNoise changed the input of raw/shadow VAD")
+
+    monkeypatch.setattr(noise_module, "RnnoiseStreamFilter", forbidden_filter)
+    settings = replace(get_settings(), rnnoise_enabled=True, rnnoise_asr_mode=mode)
+    vad = SileroVadSession(object(), FakeIterator, FakeCodec(), settings)
+    assert vad.should_finalize(b"frame", .1) is False
+    assert vad.speech_detected is True
+
+
 def test_idle_timeout_does_not_cut_active_speech():
     class SpeakingIterator(FakeIterator):
         def __call__(self, tensor, return_seconds=False):

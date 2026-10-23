@@ -339,7 +339,9 @@ def test_weak_vad_is_passed_to_combined_gate_without_reply(monkeypatch) -> None:
 
     asyncio.run(exercise())
 
-    assert pipeline.calls == [([b"noise"], {"available": True, "max_contiguous_speech_ms": 160.0})]
+    assert len(pipeline.calls) == 1 and pipeline.calls[0][0] == [b"noise"]
+    assert pipeline.calls[0][1]["max_contiguous_speech_ms"] == 160.0
+    assert "finalized_monotonic" in pipeline.calls[0][1]
     assert websocket.events == []
 
 
@@ -449,7 +451,7 @@ def test_ai_pipeline_timeout_closes_conversation_without_alert(monkeypatch) -> N
     assert websocket.close_reason == "AI turn ended"
 
 
-def test_invalid_opus_frame_returns_alert_without_crashing(monkeypatch) -> None:
+def test_invalid_opus_frame_closes_normally_to_release_device(monkeypatch) -> None:
     class PassAsr:
         async def transcribe(self, audio: PcmAudio) -> AsrResult:
             del audio
@@ -492,9 +494,9 @@ def test_invalid_opus_frame_returns_alert_without_crashing(monkeypatch) -> None:
         websocket.send_json({"type": "listen", "state": "start", "mode": "manual"})
         websocket.send_bytes(b"not-an-opus-packet")
         websocket.send_json({"type": "listen", "state": "stop"})
-        alert = websocket.receive_json()
-        assert alert["type"] == "alert"
-        websocket.send_json({"type": "abort"})
+        with pytest.raises(WebSocketDisconnect) as exc:
+            websocket.receive_json()
+        assert exc.value.code == 1000
 
 
 def test_abort_cancels_inference(monkeypatch) -> None:

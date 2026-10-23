@@ -109,7 +109,7 @@ LOCATION_HYPOTHESES = {
     "ca meo": "Cà Mau", "camel": "Cà Mau", "ho chi": "TP.HCM",
     "nha chiem": "Nha Trang", "nha chien": "Nha Trang", "nha chem": "Nha Trang",
 }
-LOCATION_MARKER = re.compile(r"\b(?:o|tai|khu vuc|thanh pho|tinh)\s+")
+LOCATION_MARKER = re.compile(r"\b(?:o|tai|khu vuc|thanh pho|tinh|in|at|city of|province of)\s+")
 
 
 def regions_in_text(text: str) -> list[str]:
@@ -122,7 +122,23 @@ def is_recommendation(text: str) -> bool:
     explicit = re.search(r"\b(?:goi y|gui y|de xuat|tu van mon|recommend\w*|suggest\w*|muon an|want to eat)\b", normalized)
     if not explicit and re.search(r"\b(?:nguon goc|xuat xu|thanh phan|dac diem|huong vi|origin|ingredients?)\b", normalized):
         return False
-    return bool(explicit or re.search(r"\b(?:mon gi|mon an ngon|mon an sang|an gi|co mon gi|co gi ngon|mot so mon|breakfast|lunch|dinner)\b", normalized))
+    return bool(explicit or re.search(r"\b(?:mon gi|mon an ngon|mon an sang|nhung mon an|cac mon an|mot vai mon|an gi|co mon gi|co gi ngon|mot so mon|breakfast|lunch|dinner)\b", normalized))
+
+
+def has_location_request(text: str) -> bool:
+    """Detect a place constraint even when ASR damaged the recommendation verb."""
+    normalized = _normalized(text)
+    if not is_food_question(text):
+        return False
+    for marker in LOCATION_MARKER.finditer(normalized):
+        if marker.group().strip() in {"in", "at", "city of", "province of"} and not re.search(r"\b(?:food|dish\w*|cuisine|recommend\w*|suggest\w*|breakfast|restaurant)\b", normalized):
+            continue
+        tail = normalized[marker.end():].strip(" .,?!")
+        # Question words, household cooking and ingredients are not place names.
+        if re.match(r"(?:dau|sao|nha|bot|heo|lon|day|do|nay|english|vietnamese|home|the morning)(?:\b|$)", tail):
+            continue
+        return True
+    return False
 
 
 def is_food_question(text: str) -> bool:
@@ -206,12 +222,12 @@ def response_language(profile: CustomerProfile, text: str, asr_language: str) ->
 
 def _resolved_request(profile: CustomerProfile) -> str:
     request = profile.food_request
-    if not profile.region or not is_recommendation(request):
+    if not profile.region:
         return request
     normalized = _normalized(request)
     aliases = [alias for region_aliases in REGION_ALIASES.values() for alias in region_aliases]
     aliases += list(LOCATION_HYPOTHESES)
-    pattern = r"(?<!\w)(?:(?:o|tai|khu vuc|thanh pho|tinh)\s+)*(?:" + "|".join(re.escape(alias) for alias in sorted(aliases, key=len, reverse=True)) + r")(?!\w)"
+    pattern = r"(?<!\w)(?:(?:o|tai|khu vuc|thanh pho|tinh|in|at)\s+)*(?:" + "|".join(re.escape(alias) for alias in sorted(aliases, key=len, reverse=True)) + r")(?!\w)"
     spans = list(re.finditer(pattern, normalized))
     for match in reversed(spans):
         request = request[:match.start()] + request[match.end():]
@@ -237,6 +253,7 @@ def prepare_turn(profile: CustomerProfile, text: str, language: str) -> tuple[st
         profile.awaiting_food_request = False
     profile.update_from_text(text)
     locations = regions_in_text(text)
+    unclear_location = not locations and has_location_request(text)
     if not profile.turn_consumed:
         if len(locations) == 1:
             profile.region = locations[0]
@@ -261,13 +278,13 @@ def prepare_turn(profile: CustomerProfile, text: str, language: str) -> tuple[st
             profile.region_needs_clarification = True
         elif re.search(r"\b(?:o kem|o ca|kem nay|khu vuc thanh pho)\b", normalized):
             profile.region_needs_clarification = True
-        elif is_recommendation(text) and re.search(r"\b(?:o|tai|khu vuc|thanh pho|tinh)\b", normalized):
+        elif unclear_location or (is_recommendation(text) and re.search(r"\b(?:o|tai)(?:\s+(?:day|do))?[ .?!]*$", normalized)):
             if not profile.region or not re.search(r"\b(?:o day|tai day|thanh pho nay|khu vuc nay)\b", normalized):
                 profile.region_needs_clarification = True
 
         if is_food_question(text) and not profile.turn_consumed:
             # Meaningful new requests replace old requests; subtitles/noise do not.
-            if not is_recommendation(text):
+            if not is_recommendation(text) and not unclear_location:
                 profile.pending_region = ""
                 profile.region_needs_clarification = False
             request = text
@@ -294,56 +311,36 @@ def prepare_turn(profile: CustomerProfile, text: str, language: str) -> tuple[st
             if english
             else "Bạn dị ứng với thực phẩm nào? Bạn nói lại tên giúp mình nhé."
         ), text
-    if profile.allergy_confirmation_rejected or profile.pending_allergy_note:
+    if (profile.allergy_confirmation_rejected or profile.pending_allergy_note) and not (
+        profile.allergy_review_deferred and is_food_question(text) and not profile.turn_consumed
+    ):
         profile.dialogue_action = "allergy_list_unclear"
         known = ", ".join(profile.pending_allergens)
         unknown = profile.pending_allergy_note[:100]
 
-        # --- Escape hatch: after too many failed retries, stop looping ---
+        # Stop the retry loop without promoting an incomplete list to confirmed.
         if profile.allergy_unclear_attempts >= _MAX_ALLERGY_UNCLEAR_RETRIES:
-            if profile.pending_allergens:
-                # Commit the partial list we could understand
-                profile.allergy_status = "declared"
-                profile.allergens = list(profile.pending_allergens)
-                profile.allergy_note = unknown  # keep the unclear part as a note
-                profile.pending_allergy_status = ""
-                profile.pending_allergens.clear()
-                profile.pending_allergy_note = ""
-                profile.allergy_unclear_attempts = 0
-                profile.allergy_question_asked = False
-                profile.allergy_updated_this_turn = True
-                labels = profile.spoken_allergens()
-                profile.dialogue_action = "allergy_partial_accepted"
-                return (
-                    f"I had difficulty hearing part of your list, but I have noted your allergy to {labels}. "
-                    "Please confirm with staff about any other ingredients. What food would you like?"
-                    if english else
-                    f"Mình không nghe rõ được một phần, nhưng đã ghi nhận bạn dị ứng với {labels}. "
-                    "Các thành phần chưa rõ bạn cần xác nhận thêm với nhân viên khi gọi món. Bạn muốn tìm món gì?"
-                ), text
-            else:
-                # Heard nothing at all — skip allergy check to unblock the user
-                profile.allergy_status = "unknown"
-                profile.pending_allergy_note = ""
-                profile.allergy_unclear_attempts = 0
-                profile.allergy_question_asked = False
-                profile.dialogue_action = "allergy_skipped"
-                return (
-                    "I was unable to hear your allergy information clearly. "
-                    "Please inform restaurant staff directly about any food allergies. What food would you like?"
-                    if english else
-                    "Mình không nghe rõ thông tin dị ứng của bạn. "
-                    "Bạn hãy trực tiếp thông báo với nhân viên nhà hàng về dị ứng trước khi gọi món. Bạn muốn tư vấn món gì?"
-                ), text
+            profile.allergy_review_deferred = True
+            profile.allergy_question_asked = False
+            profile.dialogue_action = "allergy_unconfirmed"
+            return (
+                "Your complete allergy list is still unconfirmed. I can describe dishes, but cannot identify allergy-safe choices. Please check with restaurant staff. What dish would you like to learn about?"
+                if english else
+                "Danh sách dị ứng của bạn vẫn chưa được xác nhận đầy đủ. Mình có thể giới thiệu món, nhưng chưa thể chọn món phù hợp với dị ứng. Bạn hãy nhờ nhân viên kiểm tra. Bạn muốn tìm hiểu món gì?"
+            ), text
         # --- Normal retry path ---
         if unknown:
             return (f"I could not identify this ingredient clearly: {unknown}. Please repeat your complete allergy list." if english else f"Mình chưa xác định rõ thành phần trong cụm {unknown}." + (f" Mình đã nghe được {known}." if known else "") + " Bạn hãy nói lại toàn bộ danh sách thành phần dị ứng."), text
         return ("Please repeat your complete allergy list." if english else "Mình chưa xác định rõ danh sách đúng. Bạn hãy nói lại các thành phần dị ứng, ví dụ hải sản và trứng."), text
-    if profile.allergy_status == "unknown" and is_recommendation(profile.food_request if profile.turn_consumed else text):
+    if profile.region_needs_clarification and not profile.pending_region:
+        profile.dialogue_action = "location_clarification"
+        return ("Which city or region do you mean? Please repeat the location." if english else "Bạn muốn tìm món ở tỉnh hoặc thành phố nào? Mình chưa nghe rõ địa điểm."), text
+    if profile.allergy_status == "unknown" and not profile.allergy_review_deferred and is_recommendation(profile.food_request if profile.turn_consumed else text):
         profile.dialogue_action = "allergy_question"
         profile.allergy_question_asked = True
         return ("Before I recommend food, do you have any food allergies, such as peanuts, milk, eggs or seafood?" if english else "Trước khi gợi ý món, bạn có dị ứng với thành phần nào không, ví dụ đậu phộng, sữa, trứng hoặc hải sản?"), text
     if profile.region_needs_clarification:
+        profile.dialogue_action = "location_clarification"
         if profile.pending_region:
             return (f"Did you mean {profile.pending_region}? Please confirm or name the location again." if english else f"Bạn muốn hỏi món ở {profile.pending_region}, đúng không? Nếu không đúng, bạn hãy nói lại tên địa điểm."), text
         return ("Which city or region do you mean?" if english else "Bạn muốn tìm món ở tỉnh hoặc thành phố nào? Mình chưa nghe rõ địa điểm."), text

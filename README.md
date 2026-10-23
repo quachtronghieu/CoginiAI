@@ -14,8 +14,8 @@ Dự án trợ lý giọng nói thông minh chuyên biệt **100% về Ẩm th�
       │
       ├── 1. PyAV Decoder (Opus -> PCM 16kHz)
       ├── 2. Silero VAD (Nhận diện khoảng dừng, không cắt câu)
-      ├── 3. Faster-Whisper ASR (Inference tiếng Việt trên GPU CUDA)
-      ├── 4. Ollama LLM (Gemma 2 2B - Hệ thống Prompt chuyên gia ẩm thực)
+      ├── 3. Faster-Whisper ASR (small, âm thanh raw; CUDA hoặc CPU theo cấu hình)
+      ├── 4. Ollama LLM (Gemma 3 4B - Hệ thống Prompt chuyên gia ẩm thực)
       ├── 5. Microsoft Edge-TTS (Giọng tiếng Việt Hoài My / Nam Minh)
       └── 6. PyAV Encoder (PCM 24kHz -> Opus 60ms)
       │
@@ -24,6 +24,11 @@ Dự án trợ lý giọng nói thông minh chuyên biệt **100% về Ẩm th�
 ```
 
 ---
+
+Chế độ sử dụng bình thường đặt `RNNOISE_ENABLED=false`,
+`RNNOISE_ASR_MODE=raw`, `VAD_THRESHOLD=0.6`. RNNoise shadow chỉ bật cho kiểm thử
+so sánh vì nó chạy thêm một lượt nhận dạng. Hướng dẫn dùng raw, thử turbo và
+quay lại small nằm tại [AUDIO_MODES.md](xiaozhi-backend/AUDIO_MODES.md).
 
 ## 2. Hướng Dẫn Đổi IP Mạng Mới (Wi-Fi Mới / Hotspot)
 
@@ -135,20 +140,18 @@ python scripts\setup_asr.py small
 
 ---
 
-## 4. Cài Đặt & Cấu Hình Ollama với Model Gemma 2 (2B)
+## 4. Cài Đặt & Cấu Hình Ollama với Model Gemma 3 (4B)
 
-Dự án sử dụng mô hình ngôn ngữ **`gemma2:2b`** của Google vì:
-- Tốc độ phản hồi cực nhanh (~1 giây), không có độ trễ suy nghĩ (no thinking overhead).
-- Tiêu thụ ít VRAM (~2GB VRAM), chạy cực mượt song song với Whisper.
-- Khả năng hiểu và tư vấn món ăn tiếng Việt rất tự nhiên.
+Dự án hiện cấu hình mô hình **`gemma3:4b`**. Đo tốc độ phản hồi và bộ nhớ GPU
+khi chạy cùng Whisper trên máy thực tế; không suy ra độ trễ robot từ tên model.
 
 ### Bước 1: Cài đặt Ollama
 Tải và cài đặt Ollama từ trang chủ: [https://ollama.com](https://ollama.com)
 
-### Bước 2: Kéo model Gemma 2 (2B)
+### Bước 2: Kéo model Gemma 3 (4B)
 Mở PowerShell chạy lệnh:
 ```powershell
-ollama pull gemma2:2b
+ollama pull gemma3:4b
 ```
 
 Kiểm tra danh sách model đã tải:
@@ -166,9 +169,9 @@ ollama serve
 File `.env` phải có các thông số:
 ```env
 LLM_BASE_URL=http://127.0.0.1:11434
-LLM_MODEL=gemma2:2b
-LLM_NUM_PREDICT=4080
-LLM_NUM_CTX=4096
+LLM_MODEL=gemma3:4b
+LLM_NUM_PREDICT=1024
+LLM_NUM_CTX=8192
 LLM_TIMEOUT_SECONDS=90
 ```
 

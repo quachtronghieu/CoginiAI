@@ -52,22 +52,27 @@ async def _send_ai_result(
     session_id: str,
     result: AiResponse,
     frame_duration_ms: int = 60,
+    *,
+    start_stream: bool = True,
+    end_stream: bool = True,
+    on_first_frame: Callable[[float], None] | None = None,
 ) -> None:
-    await websocket.send_json(
-        {
-            "session_id": session_id,
-            "type": "stt",
-            "text": result.transcript,
-            "language": result.language,
-            "language_probability": result.language_probability,
-        }
-    )
-    await websocket.send_json(
-        {"session_id": session_id, "type": "llm", "emotion": result.emotion}
-    )
-    await websocket.send_json(
-        {"session_id": session_id, "type": "tts", "state": "start"}
-    )
+    if start_stream:
+        await websocket.send_json(
+            {
+                "session_id": session_id,
+                "type": "stt",
+                "text": result.transcript,
+                "language": result.language,
+                "language_probability": result.language_probability,
+            }
+        )
+        await websocket.send_json(
+            {"session_id": session_id, "type": "llm", "emotion": result.emotion}
+        )
+        await websocket.send_json(
+            {"session_id": session_id, "type": "tts", "state": "start"}
+        )
     await websocket.send_json(
         {
             "session_id": session_id,
@@ -88,19 +93,24 @@ async def _send_ai_result(
             await websocket.send_bytes(frame)
             frames_sent = index
             last_frame_sent_at = monotonic()
+            if index == 1 and on_first_frame is not None:
+                on_first_frame(last_frame_sent_at)
             next_deadline = send_started + index * frame_interval
             await asyncio.sleep(max(0.0, next_deadline - monotonic()))
         actual_send_duration = (
             last_frame_sent_at - send_started if frame_count else 0.0
         )
-        await websocket.send_json(
-            {"session_id": session_id, "type": "tts", "state": "stop"}
-        )
+        if end_stream:
+            await websocket.send_json(
+                {"session_id": session_id, "type": "tts", "state": "stop"}
+            )
         stop_timestamp = time.time()
         actual_playback_duration = monotonic() - send_started
         logger.info(
-            "TTS playback drained: session=%s frames=%d expected_playback_ms=%.1f "
-            "actual_send_ms=%.1f actual_playback_ms=%.1f tts_stop_timestamp=%.3f",
+            ("TTS playback drained: session=%s frames=%d expected_playback_ms=%.1f "
+             "actual_send_ms=%.1f actual_playback_ms=%.1f tts_stop_timestamp=%.3f") if end_stream else
+            ("TTS sentence drained: session=%s frames=%d expected_playback_ms=%.1f "
+             "actual_send_ms=%.1f actual_playback_ms=%.1f sentence_done_timestamp=%.3f"),
             session_id,
             frame_count,
             expected_playback_seconds * 1000,
@@ -109,12 +119,13 @@ async def _send_ai_result(
             stop_timestamp,
         )
     except asyncio.CancelledError:
-        try:
-            await websocket.send_json(
-                {"session_id": session_id, "type": "tts", "state": "stop"}
-            )
-        except (RuntimeError, WebSocketDisconnect):
-            pass
+        if end_stream:
+            try:
+                await websocket.send_json(
+                    {"session_id": session_id, "type": "tts", "state": "stop"}
+                )
+            except (RuntimeError, WebSocketDisconnect):
+                pass
         stop_timestamp = time.time()
         logger.info(
             "TTS playback cancelled: session=%s frames_sent=%d frames_total=%d "
@@ -189,7 +200,34 @@ async def _process_utterance(
         len(history) // 2,
     )
     try:
-        kwargs = supported_kwargs(ai_pipeline.run, {"history": history, "persona": persona, "on_transcript": on_transcript, "customer_profile": customer_profile, "vad_evidence": vad_evidence})
+        stream_started = False
+        first_frame_sent = False
+
+        def record_first_frame(result, sent_at):
+            nonlocal first_frame_sent
+            if first_frame_sent:
+                return
+            first_frame_sent = True
+            evidence = vad_evidence or {}
+            finalized = evidence.get("finalized_monotonic")
+            speech_end = evidence.get("last_speech_received_monotonic")
+            timings = {"finalize_to_first_audio_sent_ms": round((sent_at - finalized) * 1000, 2) if finalized is not None else None,
+                       "estimated_speech_end_to_first_audio_sent_ms": round((sent_at - speech_end) * 1000, 2) if speech_end is not None else None}
+            logger.info("First audio sent: session=%s sample=%s timings=%s", session_id, result.diagnostic_key, timings)
+            diagnostics = getattr(ai_pipeline, "diagnostics", None)
+            if diagnostics is not None and result.diagnostic_key is not None:
+                diagnostics.update_result(result.diagnostic_key, network_timings_ms=timings, session_id=session_id)
+
+        async def send_chunk(chunk):
+            nonlocal stream_started
+            first = not stream_started
+            stream_started = True
+            await _send_ai_result(websocket, session_id, chunk, get_settings().frame_duration_ms,
+                                  start_stream=first, end_stream=False,
+                                  on_first_frame=lambda sent_at: record_first_frame(chunk, sent_at))
+
+        kwargs = supported_kwargs(ai_pipeline.run, {"history": history, "persona": persona, "on_transcript": on_transcript, "customer_profile": customer_profile, "vad_evidence": vad_evidence,
+            "on_audio_chunk": send_chunk if getattr(get_settings(), "tts_sentence_streaming", True) else None})
         result = await asyncio.wait_for(ai_pipeline.run(frames, **kwargs), timeout=get_settings().ai_pipeline_timeout_seconds)
         logger.info("Conversation session=%s transcript=%r answer=%r confirmed_allergens=%s region=%s resolved_request=%r route=%s response_language=%s sources=%s", session_id, result.transcript, result.answer, customer_profile.allergens if customer_profile else [], customer_profile.region if customer_profile else "", customer_profile.resolved_request if customer_profile else "", customer_profile.last_route if customer_profile else "", result.language, customer_profile.evidence_sources if customer_profile else [])
         if customer_profile is not None:
@@ -198,14 +236,19 @@ async def _process_utterance(
         if add_history is not None:
             add_history(result.transcript, result.answer)
 
-        await _send_ai_result(
-            websocket,
-            session_id,
-            result,
-            get_settings().frame_duration_ms,
-        )
+        if stream_started:
+            await websocket.send_json({"session_id": session_id, "type": "tts", "state": "stop"})
+            logger.info("TTS stream completed: session=%s tts_stop_timestamp=%.3f", session_id, time.time())
+        else:
+            await _send_ai_result(websocket, session_id, result, get_settings().frame_duration_ms,
+                                  **supported_kwargs(_send_ai_result, {"on_first_frame": lambda sent_at: record_first_frame(result, sent_at)}))
     except asyncio.CancelledError:
         logger.info("AI processing cancelled for session %s", session_id)
+        if stream_started:
+            try:
+                await websocket.send_json({"session_id": session_id, "type": "tts", "state": "stop"})
+            except (RuntimeError, WebSocketDisconnect):
+                pass
         raise
     except AiUnavailableError as exc:
         await _close_failed_conversation(websocket, session_id, str(exc))
@@ -233,13 +276,13 @@ async def _process_utterance(
         )
     except AiPipelineError as exc:
         logger.warning("AI pipeline error for session %s: %s", session_id, exc)
-        await websocket.send_json(alert_message(str(exc), session_id))
+        await _close_failed_conversation(websocket, session_id, str(exc))
     except WebSocketDisconnect:
         return
     except Exception:
         logger.exception("Unexpected AI error for session %s", session_id)
         try:
-            await websocket.send_json(alert_message("Local AI processing failed", session_id))
+            await _close_failed_conversation(websocket, session_id, "Local AI processing failed")
         except (RuntimeError, WebSocketDisconnect):
             pass
     finally:
@@ -290,6 +333,11 @@ async def _start_inference(
     utterance_duration_ms = session.elapsed_seconds * 1000
     frames = session.take_audio()
     vad_evidence = getattr(session, "last_vad_evidence", {"available": False})
+    vad_evidence["finalized_monotonic"] = monotonic()
+    trailing_ms = vad_evidence.get("trailing_non_speech_ms")
+    last_frame_at = getattr(session, "last_frame_received_at", None)
+    if trailing_ms is not None and last_frame_at is not None:
+        vad_evidence["last_speech_received_monotonic"] = last_frame_at - trailing_ms / 1000
     if not frames:
         return None
     if vad_evidence.get("available") and vad_evidence.get("speech_detected") is False:

@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 from dataclasses import dataclass, replace
 import importlib.util
+import json
 import logging
 import os
 import re
@@ -87,6 +88,8 @@ class _TranscriptCandidate:
     avg_logprob: float
     no_speech_probability: float
     audio_source: str = "processed"
+    language_forced: bool = False
+    reported_language_probability: float = 0.0
 
     @property
     def valid(self) -> bool:
@@ -101,15 +104,9 @@ class _TranscriptCandidate:
 
     @property
     def score(self) -> float:
-        text_bonus = 0.0
-        if self.language == "vi" and VIETNAMESE_PATTERN.search(self.text.lower()):
-            text_bonus = 0.35
-        return (
-            self.language_probability * 0.25
-            + self.avg_logprob
-            - self.no_speech_probability
-            + text_bonus
-        )
+        # Language identification (especially 1.0 from a forced language) and
+        # Vietnamese accents are not evidence that the words are correct.
+        return self.avg_logprob - self.no_speech_probability
 
 
 class FasterWhisperAsrService:
@@ -148,23 +145,55 @@ class FasterWhisperAsrService:
             return AsrResult("", "und", 0.0, -2.0)
         model = self._get_model()
 
-        initial_language = self.settings.asr_language or None
+        session_language = (
+            customer_profile.language_preference or customer_profile.response_language
+            if customer_profile is not None else ""
+        )
+        initial_language = self.settings.asr_language or (
+            session_language if session_language in SUPPORTED_LANGUAGES else None
+        )
         context_hotwords = self._context_hotwords(customer_profile)
-        initial = self._transcribe_candidate(model, samples, initial_language, hotwords=context_hotwords)
+        trace: list[dict] = []
+
+        def decode(signal, language, *, use_hotwords=True, source="primary"):
+            candidate = self._transcribe_candidate(
+                model, signal, language, hotwords=context_hotwords,
+                use_hotwords=use_hotwords,
+            )
+            candidate = replace(candidate, audio_source=source)
+            record = {
+                "text": candidate.text,
+                "language_mode": "forced" if language else "auto",
+                "requested_language": language,
+                "returned_language": candidate.language,
+                "language_probability": candidate.language_probability,
+                "reported_language_probability": candidate.reported_language_probability,
+                "hotwords": context_hotwords if use_hotwords and language != "en" and context_hotwords else None,
+                "avg_logprob": candidate.avg_logprob,
+                "no_speech_probability": candidate.no_speech_probability,
+                "selection_score": candidate.score,
+                "valid": candidate.valid,
+                "audio_source": source,
+            }
+            trace.append(record)
+            logger.info("ASR candidate %s", json.dumps(record, ensure_ascii=False))
+            return candidate
+
+        initial = decode(samples, initial_language)
         candidates = [initial]
         retry_languages: list[str] = []
-        if not self.settings.asr_language and self._needs_fallback(initial):
+        if initial_language is None and self._needs_fallback(initial):
             retry_languages = ["en", "vi"]
             candidates.extend(
-                self._transcribe_candidate(model, samples, language, hotwords=context_hotwords)
+                decode(samples, language)
                 for language in retry_languages
             )
 
         valid_candidates = [candidate for candidate in candidates if candidate.valid]
         if not valid_candidates:
             # Do not keep repeating a hallucinated hotword list on every retry.
-            retry_language = self.settings.asr_language or (initial.language if initial.language in SUPPORTED_LANGUAGES else "vi")
-            retry = self._transcribe_candidate(model, samples, retry_language, use_hotwords=False)
+            retry_language = initial_language or (initial.language if initial.language in SUPPORTED_LANGUAGES else "vi")
+            retry = decode(samples, retry_language, use_hotwords=False)
             if retry.valid:
                 valid_candidates.append(retry)
         if valid_candidates:
@@ -181,7 +210,7 @@ class FasterWhisperAsrService:
             if raw_audio.sample_rate != audio.sample_rate or raw_audio.channels != 1:
                 raise AiUnavailableError("Raw/filtered ASR comparison requires matching 16 kHz mono PCM")
             raw_signal = np.frombuffer(raw_audio.data, dtype="<i2").astype(np.float32) / 32768.0
-            raw_candidate = replace(self._transcribe_candidate(model, raw_signal, selected.language, hotwords=context_hotwords), audio_source="raw")
+            raw_candidate = decode(raw_signal, selected.language, source="raw")
             if raw_candidate.valid:
                 alternatives = (selected.text, raw_candidate.text)
                 if safety_context:
@@ -215,6 +244,7 @@ class FasterWhisperAsrService:
             alternatives,
             reason,
             selected.no_speech_probability,
+            tuple(trace),
         )
 
     @staticmethod
@@ -279,7 +309,7 @@ class FasterWhisperAsrService:
             best_of=3,
             temperature=0.0,
             condition_on_previous_text=False,
-            hotwords=(hotwords or self.settings.asr_hotwords) if language != "en" and use_hotwords else None,
+            hotwords=hotwords if language != "en" and use_hotwords and hotwords else None,
             no_speech_threshold=0.45,
             log_prob_threshold=-1.0,
             hallucination_silence_threshold=1.0,
@@ -297,7 +327,8 @@ class FasterWhisperAsrService:
         detected_language = str(
             language or getattr(info, "language", "") or "und"
         ).lower()
-        probability = float(getattr(info, "language_probability", 0.0) or 0.0)
+        reported_probability = float(getattr(info, "language_probability", 0.0) or 0.0)
+        probability = 0.0 if language is not None else reported_probability
         avg_logprob = self._average_metric(segment_list, "avg_logprob", 0.0)
         no_speech_probability = self._average_metric(
             segment_list, "no_speech_prob", 0.0
@@ -308,6 +339,8 @@ class FasterWhisperAsrService:
             probability,
             avg_logprob,
             no_speech_probability,
+            language_forced=language is not None,
+            reported_language_probability=reported_probability,
         )
 
     def _needs_fallback(self, candidate: _TranscriptCandidate) -> bool:

@@ -34,12 +34,16 @@ Copy-Item .env.example .env
 - Set `RAG_ENABLED=true` and `RAG_DB_PATH` to the checked-in
   `../rag-tools/cuisine_v3.sqlite3` if the RAG database is used.
 - Set local model paths after downloading Whisper and Piper models.
+- Daily audio defaults are `ASR_MODEL=small`, `RNNOISE_ENABLED=false`,
+  `RNNOISE_ASR_MODE=raw` and `VAD_THRESHOLD=0.6`. Validate quiet speech with
+  the new microphone before tuning the threshold. See
+  [audio modes and reversible turbo trials](xiaozhi-backend/AUDIO_MODES.md).
 
 5. Start Ollama and the backend:
 
 ```powershell
 ollama serve
-\.venv\Scripts\python.exe -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+.\.venv\Scripts\python.exe -m uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 
 Health checks:

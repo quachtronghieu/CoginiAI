@@ -129,7 +129,9 @@ def test_faster_whisper_adapter_contract() -> None:
     service._model = Model()
     result = asyncio.run(service.transcribe(PcmAudio(b"\x00\x08" * 3200, 16_000)))
 
-    assert result == AsrResult("xin chao", "vi", 0.98)
+    assert result == AsrResult("xin chao", "vi", 0.0)
+    assert result.candidates[0]["reported_language_probability"] == .98
+    assert result.candidates[0]["language_mode"] == "forced"
 
 
 def test_blank_asr_language_enables_auto_detection() -> None:
@@ -187,7 +189,7 @@ def test_short_english_non_vi_en_auto_result_retries_english() -> None:
     service._model = Model()
     result = asyncio.run(service.transcribe(PcmAudio(b"\x00\x08" * 3200, 16_000)))
 
-    assert result == AsrResult("Good morning", "en", 0.82, -0.1)
+    assert result == AsrResult("Good morning", "en", 0.0, -0.1)
 
 
 def test_short_vietnamese_low_confidence_retries_vietnamese() -> None:
@@ -219,7 +221,7 @@ def test_short_vietnamese_low_confidence_retries_vietnamese() -> None:
     service._model = Model()
     result = asyncio.run(service.transcribe(PcmAudio(b"\x00\x08" * 3200, 16_000)))
 
-    assert result == AsrResult("Xin chào", "vi", 0.86, -0.1)
+    assert result == AsrResult("Xin chào", "vi", 0.0, -0.1)
 
 
 def test_cyrillic_auto_result_falls_back_to_valid_english() -> None:

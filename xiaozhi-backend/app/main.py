@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from contextlib import asynccontextmanager
 
 from .config import get_settings
 from .diagnostics import configure_diagnostics_logging
@@ -13,7 +14,16 @@ from .ota import router as ota_router
 from . import websocket as websocket_module
 
 
-app = FastAPI(title=settings.app_name, version="0.1.0")
+@asynccontextmanager
+async def lifespan(app):
+    tts = getattr(websocket_module.ai_pipeline, "tts", None)
+    warmup = getattr(tts, "warmup", None)
+    if settings.tts_warmup_enabled and warmup is not None:
+        await warmup()
+    yield
+
+
+app = FastAPI(title=settings.app_name, version="0.1.0", lifespan=lifespan)
 app.include_router(ota_router)
 app.include_router(websocket_module.router)
 

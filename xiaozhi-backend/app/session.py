@@ -47,6 +47,7 @@ class AudioSession:
         self.customer_profile = CustomerProfile()
         self.last_utterance_had_speech = True
         self.last_vad_evidence: dict = {"available": False}
+        self.last_frame_received_at: float | None = None
 
     def update_customer_profile(self, text: str) -> bool:
         updated = self.customer_profile.update_from_text(text)
@@ -142,6 +143,7 @@ class AudioSession:
         if not preserve_audio:
             self._clear_buffer()
             self.vad_service.reset()
+            self.last_frame_received_at = None
         self.mode = mode
         self.active = True
         self._started_at = self.clock()
@@ -160,6 +162,7 @@ class AudioSession:
             return FinalizeReason.BUFFER_LIMIT
 
         self._frames.append(frame)
+        self.last_frame_received_at = self.clock()
         self._total_bytes += len(frame)
 
         elapsed_seconds = self.clock() - self._started_at
