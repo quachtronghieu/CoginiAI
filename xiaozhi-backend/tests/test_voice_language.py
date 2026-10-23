@@ -195,3 +195,76 @@ def test_asr_disagreement_does_not_commit_or_call_llm():
     assert profile.allergy_status == "unknown" and profile.pending_allergens == ["sữa"]
     assert profile.last_route == "asr_clarification"
     assert profile.dialogue_action == "asr_clarification"
+
+def test_fixed_vietnamese_asr_passes_language_and_hotwords():
+    from dataclasses import replace
+    from app.config import get_settings
+    from app.asr import FasterWhisperAsrService
+
+    settings = replace(get_settings(), asr_model="dummy-model", asr_language="vi")
+    service = FasterWhisperAsrService(settings)
+
+    class MockModel:
+        def __init__(self):
+            self.last_kwargs = {}
+
+        def transcribe(self, samples, **kwargs):
+            self.last_kwargs = kwargs
+            segment = type("Segment", (), {"text": "bún chả Hà Nội", "avg_logprob": -0.1, "no_speech_prob": 0.01})()
+            info = type("Info", (), {"language": "vi", "language_probability": 0.99})()
+            return iter([segment]), info
+
+    mock_model = MockModel()
+    service._model = mock_model
+    result = asyncio.run(service.transcribe(PcmAudio(b"\x00\x08" * 3200, 16000)))
+
+    assert result.text == "bún chả Hà Nội"
+    assert result.language == "vi"
+    assert mock_model.last_kwargs["language"] == "vi"
+    assert "initial_prompt" not in mock_model.last_kwargs
+    assert "phở" in mock_model.last_kwargs["hotwords"]
+    assert "Cà Mau" in mock_model.last_kwargs["hotwords"]
+
+
+def test_combined_context_and_expanded_hotwords():
+    from dataclasses import replace
+    from app.config import get_settings
+    from app.asr import FasterWhisperAsrService
+
+    settings = replace(get_settings(), asr_model="dummy-model", asr_language="vi")
+    service = FasterWhisperAsrService(settings)
+
+    class MockModel:
+        def __init__(self):
+            self.last_kwargs = {}
+
+        def transcribe(self, samples, **kwargs):
+            self.last_kwargs = kwargs
+            segment = type("Segment", (), {"text": "chính xác", "avg_logprob": -0.1, "no_speech_prob": 0.01})()
+            info = type("Info", (), {"language": "vi", "language_probability": 0.99})()
+            return iter([segment]), info
+
+    mock_model = MockModel()
+    service._model = mock_model
+    profile = CustomerProfile(pending_allergy_status="declared")
+    result = asyncio.run(service.transcribe(PcmAudio(b"\x00\x08" * 3200, 16000), customer_profile=profile))
+
+    assert result.text == "chính xác"
+    assert "chính xác" in mock_model.last_kwargs["hotwords"]
+    assert "bún bò Huế" in mock_model.last_kwargs["hotwords"]
+    assert "dị ứng" in mock_model.last_kwargs["hotwords"]
+
+
+def test_settings_default_to_vietnamese_with_rich_hotwords():
+    from app.config import get_settings
+    get_settings.cache_clear()
+    settings = get_settings()
+
+    assert settings.asr_language == "vi"
+    assert settings.tts_default_language == "vi"
+    assert "phở" in settings.asr_hotwords
+    assert "bún bò Huế" in settings.asr_hotwords
+    assert "cơm tấm" in settings.asr_hotwords
+    assert "dị ứng" in settings.asr_hotwords
+    assert "Cần Thơ" in settings.asr_hotwords
+    assert "Hà Nội" in settings.asr_hotwords

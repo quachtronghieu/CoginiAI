@@ -129,6 +129,51 @@ class AiPipeline(Protocol):
     ) -> None: ...
 
 
+
+def detect_emotion(transcript: str, answer: str, customer_profile: CustomerProfile | None = None, needs_clarification: bool = False) -> str:
+    """Classify assistant response into one of the 9 custom face emotions:
+    neutral, happy, sad, angry, thinking, sleepy, surprised, delicious, laughing
+    """
+    if needs_clarification:
+        return "thinking"
+
+    text = f"{transcript} {answer}".lower()
+
+    # 1. Sleepy / tired
+    if any(k in text for k in ["buồn ngủ", "mệt mỏi", "mệt quá", "ngủ ngon", "nghỉ ngơi", "sleepy", "tired", "good night"]):
+        return "sleepy"
+
+    # 2. Laughing / funny / joke
+    if any(k in text for k in ["haha", "hihi", "hehe", "buồn cười", "hài hước", "vui tính", "lol", "funny", "laugh", "joke", "đùa"]):
+        return "laughing"
+
+    # 3. Angry
+    if any(k in text for k in ["tức giận", "giận dữ", "bực mình", "bực mình quá", "angry", "furious"]):
+        return "angry"
+
+    # 4. Surprised
+    if any(k in text for k in ["bất ngờ", "ngạc nhiên", "thật sao", "thật á", "wow", "surprised", "surprise", "amazing", "kinh ngạc"]):
+        return "surprised"
+
+    # 5. Sad / warning / allergic / unable
+    if any(k in text for k in ["dị ứng", "không an toàn", "rất tiếc", "xin lỗi", "không thể", "không tìm thấy", "sad", "sorry", "allergy", "allergic", "unfortunately"]):
+        return "sad"
+
+    # 6. Food / delicious (culinary domain)
+    if any(k in text for k in ["ngon", "đặc sản", "món ăn", "hương vị", "thưởng thức", "ẩm thực", "công thức", "nấu", "delicious", "tasty", "recipe", "cuisine", "yummy"]):
+        return "delicious"
+
+    # 7. Happy / greetings / compliment
+    if any(k in text for k in ["chào bạn", "xin chào", "cảm ơn", "tuyệt vời", "rất vui", "hoan nghênh", "hello", "hi ", "thanks", "thank you", "great", "glad", "welcome"]):
+        return "happy"
+
+    # 8. Thinking / inquiring
+    if any(k in text for k in ["suy nghĩ", "để xem", "tìm hiểu", "thắc mắc", "thinking", "let me see", "đang tra"]):
+        return "thinking"
+
+    return "neutral"
+
+
 class LocalAiPipeline:
     """Offline pipeline assembled from local service adapters."""
 
@@ -326,10 +371,17 @@ class LocalAiPipeline:
                 asr_result.language_probability,
             )
             audio_frames = await self.codec.encode_opus(output_audio)
+            emotion = detect_emotion(
+                transcript,
+                answer,
+                customer_profile=customer_profile,
+                needs_clarification=asr_result.needs_clarification,
+            )
             return AiResponse(
                 transcript=transcript,
                 answer=answer,
                 audio_frames=audio_frames,
+                emotion=emotion,
                 language=language,
                 language_probability=asr_result.language_probability,
             )

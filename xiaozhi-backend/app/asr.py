@@ -150,13 +150,17 @@ class FasterWhisperAsrService:
 
         initial_language = self.settings.asr_language or None
         context_hotwords = self._context_hotwords(customer_profile)
-        initial = self._transcribe_candidate(model, samples, initial_language, hotwords=context_hotwords)
+        if context_hotwords and self.settings.asr_hotwords:
+            active_hotwords = f"{context_hotwords}, {self.settings.asr_hotwords}"
+        else:
+            active_hotwords = context_hotwords or self.settings.asr_hotwords
+        initial = self._transcribe_candidate(model, samples, initial_language, hotwords=active_hotwords)
         candidates = [initial]
         retry_languages: list[str] = []
         if not self.settings.asr_language and self._needs_fallback(initial):
             retry_languages = ["en", "vi"]
             candidates.extend(
-                self._transcribe_candidate(model, samples, language, hotwords=context_hotwords)
+                self._transcribe_candidate(model, samples, language, hotwords=active_hotwords)
                 for language in retry_languages
             )
 
@@ -181,7 +185,7 @@ class FasterWhisperAsrService:
             if raw_audio.sample_rate != audio.sample_rate or raw_audio.channels != 1:
                 raise AiUnavailableError("Raw/filtered ASR comparison requires matching 16 kHz mono PCM")
             raw_signal = np.frombuffer(raw_audio.data, dtype="<i2").astype(np.float32) / 32768.0
-            raw_candidate = replace(self._transcribe_candidate(model, raw_signal, selected.language, hotwords=context_hotwords), audio_source="raw")
+            raw_candidate = replace(self._transcribe_candidate(model, raw_signal, selected.language, hotwords=active_hotwords), audio_source="raw")
             if raw_candidate.valid:
                 alternatives = (selected.text, raw_candidate.text)
                 if safety_context:

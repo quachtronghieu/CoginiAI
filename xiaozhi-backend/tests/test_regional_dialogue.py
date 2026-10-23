@@ -193,3 +193,44 @@ def test_food_query_captions_and_guest_quotes_are_not_answers():
     match = RagMatch("Bánh Nam Định", "source", "Bánh Nam Định là món ăn sáng có thịt và rau.\n\nẢnh: món ăn sáng chụp bởi tôi.\n\nÔng cho biết món bánh này rất ngon.\n\nHiệu bánh đóng gói 10 chiếc bánh một túi.", 1)
     evidence = evidence_passages([match], "Nam Định", True, "Gợi ý món ăn sáng ở Nam Định")
     assert not any("Ông cho biết" in item.text or "Ảnh:" in item.text for item in evidence)
+
+def test_da_lac_alias_resolves_to_da_lat():
+    profile = CustomerProfile(allergy_status="none")
+    reply, resolved = prepare_turn(profile, "Gợi ý món ăn ở đà lạc", "vi")
+    assert profile.region == "Đà Lạt"
+    assert "Đà Lạt" in resolved
+    assert not profile.region_needs_clarification
+
+
+def test_ga_mau_alias_resolves_to_ca_mau():
+    profile = CustomerProfile(allergy_status="none")
+    reply, resolved = prepare_turn(profile, "Gợi ý món ăn ở gà mau", "vi")
+    assert profile.region == "Cà Mau"
+    assert "Cà Mau" in resolved
+    assert not profile.region_needs_clarification
+
+
+def test_full_dialogue_da_lac_allergy_flow_then_switch_to_ca_mau():
+    profile = CustomerProfile()
+    # Step 1: User asks for recommendation at 'đà lạc'
+    reply, _ = prepare_turn(profile, "hãy gợi ý món ăn cho tôi ở đà lạc", "vi")
+    assert reply is not None and "dị ứng" in reply
+    assert profile.region == "Đà Lạt"
+    assert not profile.region_needs_clarification
+
+    # Step 2: User provides allergy statement
+    reply, _ = prepare_turn(profile, "tôi không có dị ứng thực phẩm", "vi")
+    assert reply is not None and "không có dị ứng" in reply
+
+    # Step 3: User confirms
+    reply, resolved = prepare_turn(profile, "chính xác", "vi")
+    assert reply is None
+    assert profile.region == "Đà Lạt"
+    assert "Đà Lạt" in resolved
+
+    # Step 4: User changes location to Cà Mau (misheard as 'gà mau')
+    reply, resolved = prepare_turn(profile, "gợi ý món ở gà mau", "vi")
+    assert reply is None
+    assert profile.region == "Cà Mau"
+    assert "Cà Mau" in resolved
+

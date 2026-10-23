@@ -16,13 +16,13 @@ _MAX_ALLERGY_UNCLEAR_RETRIES = 3
 # These are search labels, not claims about current administrative boundaries.
 REGION_ALIASES = {
     "Cần Thơ": ("can tho",),
-    "Cà Mau": ("ca mau",),
+    "Cà Mau": ("ca mau", "ga mau", "ga meo"),
     "TP.HCM": ("tp hcm", "tp.hcm", "ho chi minh", "sai gon", "saigon", "hcm", "ho chi minh city"),
     "Hà Nội": ("ha noi", "hanoi"),
     "Lạng Sơn": ("lang son",),
     "Đà Nẵng": ("da nang", "danang"),
     "Huế": ("hue",),
-    "Đà Lạt": ("da lat", "dalat"),
+    "Đà Lạt": ("da lat", "dalat", "da lac", "dalac"),
     "Nha Trang": ("nha trang",),
     "Hội An": ("hoi an",),
     "Phú Quốc": ("phu quoc",),
@@ -106,7 +106,7 @@ REGION_ALIASES = {
 
 # Observed ASR mistakes are hypotheses only; never commit them without confirmation.
 LOCATION_HYPOTHESES = {
-    "ca meo": "Cà Mau", "camel": "Cà Mau", "ho chi": "TP.HCM",
+    "ca meo": "Cà Mau", "camel": "Cà Mau", "ga mau": "Cà Mau", "ga meo": "Cà Mau", "da lac": "Đà Lạt", "dalac": "Đà Lạt", "ho chi": "TP.HCM",
     "nha chiem": "Nha Trang", "nha chien": "Nha Trang", "nha chem": "Nha Trang",
 }
 LOCATION_MARKER = re.compile(r"\b(?:o|tai|khu vuc|thanh pho|tinh)\s+")
@@ -119,7 +119,11 @@ def regions_in_text(text: str) -> list[str]:
 
 def is_recommendation(text: str) -> bool:
     normalized = _normalized(text)
-    explicit = re.search(r"\b(?:goi y|gui y|de xuat|tu van mon|recommend\w*|suggest\w*|muon an|want to eat)\b", normalized)
+    explicit = re.search(r"\b(?:goi y|gui y|de xuat|tu van mon|recommend\w*|suggest\w*)\b", normalized)
+    want_open = re.search(r"\b(?:muon an|them an|want to eat)\b(?:\s+(?:mon\s+gi|gi|sang|trua|toi|chieu|dem|khuya|vat|ngon|o|tai|khu vuc|thanh pho|tinh)\b|\s*$)", normalized)
+    if not (explicit or want_open) and re.search(r"\b(?:muon an|them an|thich an|want to eat)\s+\w+", normalized):
+        return False
+    explicit = explicit or want_open
     if not explicit and re.search(r"\b(?:nguon goc|xuat xu|thanh phan|dac diem|huong vi|origin|ingredients?)\b", normalized):
         return False
     return bool(explicit or re.search(r"\b(?:mon gi|mon an ngon|mon an sang|an gi|co mon gi|co gi ngon|mot so mon|breakfast|lunch|dinner)\b", normalized))
@@ -127,9 +131,9 @@ def is_recommendation(text: str) -> bool:
 
 def is_food_question(text: str) -> bool:
     return is_recommendation(text) or bool(re.search(
-        r"\b(?:mon|am thuc|thanh phan|nguyen lieu|nguon goc|xuat xu|calo|cach an|cach nau|cach lam|an nhu the nao|huong vi|pho|bun|banh|com|do uong|thuc don|nha hang|nau an|dinh duong|food|dish\w*|ingredient\w*|origin|cuisine|recipe|menu|restaurant|cooking|nutrition|gyoza|pizza|sushi|taco|hamburger)\b",
+        r"\b(?:muon an|them an|thich an|want to eat|mon|am thuc|thanh phan|nguyen lieu|nguon goc|xuat xu|calo|cach an|cach nau|cach lam|nau nhu the nao|lam nhu the nao|che bien|cong thuc|an nhu the nao|huong vi|pho|bun|banh|com|canh|sup|xoi|mi|mien|hu tieu|lau|goi|nom|nem|chan ga|cut lon|tokbokki|kimbap|bingsu|takoyaki|bac xiu|nuoc mia|sua chua|do uong|thuc don|nha hang|nau an|dinh duong|food|dish\w*|ingredient\w*|origin|cuisine|recipe|menu|restaurant|cooking|nutrition|gyoza|pizza|sushi|taco|hamburger)\b",
         _normalized(text),
-    )) or bool(re.search(r"\bcháo\b", text, re.I)) or bool(allergen_keywords(text) and re.search(r"\b(?:co .*khong|bao nhieu|lam .*nao|tot khong|la gi)\b", _normalized(text)))
+    )) or bool(re.search(r"\b(?:cháo|chè|chả|giò|thịt|cá|gà|bò|heo|lợn|vịt|tôm|cua|ốc|hến|trà|sườn|mực|khổ qua)\b", text, re.I)) or bool(allergen_keywords(text) and re.search(r"\b(?:co .*khong|bao nhieu|lam .*nao|tot khong|la gi)\b", _normalized(text)))
 
 
 def courtesy_or_domain_reply(text: str, language: str, profile: CustomerProfile | None = None) -> str | None:
@@ -360,6 +364,8 @@ def prepare_turn(profile: CustomerProfile, text: str, language: str) -> tuple[st
     if not is_food_question(text):
         profile.dialogue_action = "unclear_food_request"
         return ("Please repeat your food question or name the location." if english else "Mình chưa nghe rõ yêu cầu về món ăn. Bạn hãy nói lại câu hỏi hoặc tên địa điểm."), text
+    if profile.region and is_recommendation(profile.food_request or text):
+        return None, _resolved_request(profile)
     # A location-only clarification resumes the request even after history rolls over.
     if locations and len(normalized.split()) < 4 and profile.food_request:
         return None, _resolved_request(profile)

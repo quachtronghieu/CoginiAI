@@ -29,7 +29,7 @@ DEFAULT_DATA_DIR = Path(os.getenv("CUISINE_DATA_DIR", "tasteofvietnam_data"))
 DEFAULT_OLLAMA_API = os.getenv(
     "CUISINE_OLLAMA_API", "http://127.0.0.1:11434/api/chat"
 )
-DEFAULT_MODEL = os.getenv("CUISINE_MODEL", "qwen2.5:3b")
+DEFAULT_MODEL = os.getenv("CUISINE_MODEL", "gemma3:4b")
 DEFAULT_TOP_K = 3
 CHUNK_SIZE = 1100
 
@@ -38,6 +38,8 @@ STOP_WORDS = {
     "của", "đâu", "đây", "được", "gì", "hay", "hơn", "không", "là", "lại",
     "làm", "một", "món", "nào", "nhiêu", "nhiều", "như", "những", "này", "nên", "ra",
     "sao", "thế", "thì", "từ", "tại", "trong", "và", "về", "với", "ăn",
+    "gợi", "ý", "giới", "thiệu", "tôi", "mình", "số", "khu", "vực", "thành", "phố",
+    "muốn", "thèm", "thích", "thử", "hỏi", "biết", "xin", "cách", "nấu",
 }
 
 TERMINAL_MARKERS = {
@@ -76,6 +78,10 @@ def _tokens(text: str) -> list[str]:
 
 
 def _question_terms(question: str) -> list[str]:
+    question = re.sub(r"\b(?:sả|xả)\s+tất\b", "sả tắc", question, flags=re.I)
+    question = re.sub(r"\bxả\s+tắc\b", "sả tắc", question, flags=re.I)
+    question = re.sub(r"\bhủ\s+tíu\b", "hủ tiếu", question, flags=re.I)
+    question = re.sub(r"\bmắm\s+tôn\b", "mắm tôm", question, flags=re.I)
     terms: list[str] = []
     for token in TOKEN_RE.findall(question.casefold()):
         normalized = _normalized(token)
@@ -342,6 +348,8 @@ def _row_score(
     if any(phrase in normalized_question for phrase in ("tot khong", "an nhieu")):
         if re.search(r"không nên|quá nhiều|nguy cơ|hạn chế|vừa phải", content, re.I):
             phrase_bonus += 3.0
+    if re.search(r"Món:.*Danh mục:|Giới thiệu.*Nguyên liệu.*Hương vị", content, re.I | re.S):
+        phrase_bonus += 2.5
     return coverage * 8.0 + content_coverage * 6.0 + title_matches * 0.8 + phrase_bonus + lexical_bonus
 
 
@@ -498,7 +506,7 @@ def answer(
         "Không chào hỏi, không nói đã hiểu yêu cầu, không nhắc lại chỉ dẫn và không chép nguyên văn tài liệu. "
         "Trả lời trực tiếp bằng 1 đến 3 câu tiếng Việt tự nhiên, không Markdown. "
         "Không tự thêm con số, nguyên liệu, nguồn gốc, địa chỉ hoặc nhận định. "
-        "Phải trả lời đủ từng vế của câu hỏi. Với câu hỏi dinh dưỡng hoặc sức khỏe, "
+        "Phải trả lời đủ từng vế của câu hỏi. Khi người dùng nói muốn ăn hoặc hỏi về một món cụ thể, hãy tóm tắt đầy đủ nguyên liệu chính, hương vị đặc trưng (độ ngon) và nơi bán hoặc cách thưởng thức có trong tài liệu. Với câu hỏi dinh dưỡng hoặc sức khỏe, "
         "không được suy diễn rằng có chất dinh dưỡng nghĩa là ăn nhiều sẽ tốt; hãy nêu đúng giới hạn và nguy cơ trong tài liệu. "
         "Nếu các đoạn mâu thuẫn, hãy nói rõ sự mâu thuẫn và chọn cách diễn đạt thận trọng. "
         "Nếu tài liệu không chứa câu trả lời, nói đúng câu: Kho dữ liệu hiện chưa có đủ thông tin để trả lời câu hỏi này."

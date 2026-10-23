@@ -19,6 +19,33 @@ from .config import Settings
 logger = logging.getLogger(__name__)
 
 
+def clean_speech_text(text: str) -> str:
+    cleaned = text.strip()
+    if not cleaned:
+        return ""
+    # Clean dashes, bullet points and non-breaking spaces
+    cleaned = re.sub(r"^[–—•\-\*]\s*", "", cleaned)
+    cleaned = re.sub(r"[–—]", "-", cleaned)
+    cleaned = cleaned.replace("\xa0", " ").strip()
+
+    # Normalize price/currency for speech (e.g. 200.000 VNĐ -> 200 nghìn đồng)
+    cleaned = re.sub(r"(\d+)\.000\s*(?:VNĐ|VND|đồng)", r"\1 nghìn đồng", cleaned, flags=re.I)
+    cleaned = re.sub(r"\b(?:VNĐ|VND)\b", "đồng", cleaned)
+
+    # Convert semicolons into full stops so clauses stay short, digestible, and well-paused
+    cleaned = re.sub(r"\s*;\s*", ". ", cleaned)
+    # Convert colons into comma
+    cleaned = re.sub(r"\s*:\s*", ", ", cleaned)
+    # Remove enclosing parentheses while preserving contents
+    cleaned = re.sub(r"\(([^)]+)\)", r", \1, ", cleaned)
+    # Tidy punctuation spacing
+    cleaned = re.sub(r"\s+,", ",", cleaned)
+    cleaned = re.sub(r",\s*,+", ",", cleaned)
+    cleaned = re.sub(r"\s*\.\s*", ". ", cleaned)
+    cleaned = re.sub(r"\s+", " ", cleaned).strip()
+    return cleaned
+
+
 class PiperTtsService:
     def __init__(self, settings: Settings) -> None:
         self.settings = settings
@@ -70,15 +97,16 @@ class PiperTtsService:
             raise AiUnavailableError(
                 "TTS unavailable. Configure both TTS_MODEL_VI and TTS_MODEL_EN, or legacy TTS_MODEL."
             )
-        if not text.strip():
+        cleaned = clean_speech_text(text)
+        if not cleaned:
             raise ValueError("Cannot synthesize empty text")
         selected_language = self.select_language(
-            text, language, language_probability
+            cleaned, language, language_probability
         )
         started = monotonic()
         try:
             return await asyncio.to_thread(
-                self._synthesize_sync, text, selected_language
+                self._synthesize_sync, cleaned, selected_language
             )
         finally:
             logger.info(
@@ -110,8 +138,8 @@ class PiperTtsService:
         if re.search(r"[ăâđêôơưàáạảãằắặẳẵầấậẩẫèéẹẻẽềếệểễìíịỉĩòóọỏõồốộổỗờớợởỡùúụủũừứựửữỳýỵỷỹ]", lowered):
             return "vi"
         words = set(re.findall(r"[a-z]+", lowered))
-        vi_words = {"xin", "chao", "cam", "on", "khong", "toi", "ban", "la", "va", "cua", "mot", "duoc"}
-        en_words = {"hello", "hi", "ok", "okay", "thanks", "thank", "yes", "no", "good", "morning", "weather", "time", "help", "sure", "the", "is", "are", "you", "your", "and", "please"}
+        vi_words = {"xin", "chao", "cam", "on", "khong", "toi", "ban", "la", "va", "cua", "mot", "duoc", "co", "gi", "mon", "an", "ngon", "pho", "bun", "com", "banh", "nuoc", "di", "ung", "nay", "do", "o", "tai", "nhe", "a", "da", "vui", "long", "minh"}
+        en_words = {"hello", "hi", "ok", "okay", "thanks", "thank", "yes", "no", "good", "morning", "weather", "time", "help", "sure", "the", "is", "are", "you", "your", "and", "please", "certainly"}
         vi_score = len(words & vi_words)
         en_score = len(words & en_words)
         if vi_score > en_score:
@@ -124,10 +152,40 @@ class PiperTtsService:
 
     def _synthesize_sync(self, text: str, language: str) -> PcmAudio:
         voice = self._get_voice(language)
+
+        # If real PiperVoice with sentence streaming is available
+        if hasattr(voice, "synthesize") and hasattr(voice, "config"):
+            syn_config = None
+            try:
+                from piper.config import SynthesisConfig
+                syn_config = SynthesisConfig(length_scale=1.18)
+            except Exception:
+                pass
+
+            chunks = list(
+                voice.synthesize(text, syn_config=syn_config)
+                if syn_config
+                else voice.synthesize(text)
+            )
+            if chunks:
+                silence_samples = int(voice.config.sample_rate * 0.25)
+                silence_bytes = b"\x00\x00" * silence_samples
+                pcm_parts = []
+                for i, chunk in enumerate(chunks):
+                    pcm_parts.append(chunk.audio_int16_bytes)
+                    if i < len(chunks) - 1:
+                        pcm_parts.append(silence_bytes)
+                return PcmAudio(b"".join(pcm_parts), voice.config.sample_rate, 1)
+
+        # Fallback for voice objects or mocks defining synthesize_wav
         output = io.BytesIO()
         if hasattr(voice, "synthesize_wav"):
             with wave.open(output, "wb") as wav_file:
-                voice.synthesize_wav(text, wav_file)
+                try:
+                    from piper.config import SynthesisConfig
+                    voice.synthesize_wav(text, wav_file, syn_config=SynthesisConfig(length_scale=1.18))
+                except (TypeError, Exception):
+                    voice.synthesize_wav(text, wav_file)
             output.seek(0)
             with wave.open(output, "rb") as wav_file:
                 channels = wav_file.getnchannels()
@@ -139,7 +197,7 @@ class PiperTtsService:
 
         chunks = list(voice.synthesize(text))
         pcm = b"".join(chunk.audio_int16_bytes for chunk in chunks)
-        return PcmAudio(pcm, voice.config.sample_rate, 1)
+        return PcmAudio(pcm, getattr(voice, "config", None).sample_rate if hasattr(voice, "config") else 22050, 1)
 
     def _get_voice(self, language: str):
         cache_key, model_path, config_path = self._voice_config(language)
@@ -201,6 +259,7 @@ class EdgeTtsService:
         self.settings = settings
         self.voice_vi = settings.tts_voice_vi or "vi-VN-HoaiMyNeural"
         self.voice_en = settings.tts_voice_en or "en-US-JennyNeural"
+        self._piper_fallback = PiperTtsService(settings)
 
     def available(self) -> bool:
         return self.health()["tts"]
@@ -221,29 +280,54 @@ class EdgeTtsService:
         language: str,
         language_probability: float = 1.0,
     ) -> PcmAudio:
-        if not self.available():
-            raise AiUnavailableError("Edge-TTS is unavailable. Install edge-tts and av.")
-        cleaned = text.strip()
+        if not self.available() and not self._piper_fallback.available():
+            raise AiUnavailableError("TTS is unavailable. Install edge-tts or configure Piper models.")
+        cleaned = clean_speech_text(text)
         if not cleaned:
             raise ValueError("Cannot synthesize empty text")
 
         selected_lang = self.select_language(cleaned, language, language_probability)
         voice = self.voice_vi if selected_lang.startswith("vi") else self.voice_en
         started = monotonic()
+        target_rate = self.settings.server_sample_rate
         try:
             import edge_tts
 
-            communicate = edge_tts.Communicate(cleaned, voice)
-            mp3_buf = bytearray()
-            async for chunk in communicate.stream():
-                if chunk["type"] == "audio":
-                    mp3_buf.extend(chunk["data"])
+            # For multi-sentence or long text (> 160 chars), synthesize sentence-by-sentence with natural pauses
+            sentences = [s.strip() for s in re.split(r"(?<=[.!?])\s+", cleaned) if s.strip()]
+            if not sentences or len(cleaned) < 160:
+                sentences = [cleaned]
 
-            if not mp3_buf:
-                raise RuntimeError(f"Edge-TTS returned no audio data for voice {voice}")
+            pcm_parts = bytearray()
+            silence_between = b"\x00\x00" * int(target_rate * 0.2)  # 200ms natural breathing pause
 
-            target_rate = self.settings.server_sample_rate
-            return await asyncio.to_thread(_mp3_to_pcm, bytes(mp3_buf), target_rate)
+            for i, sentence in enumerate(sentences):
+                communicate = edge_tts.Communicate(sentence, voice)
+                mp3_buf = bytearray()
+                async for chunk in communicate.stream():
+                    if chunk["type"] == "audio":
+                        mp3_buf.extend(chunk["data"])
+
+                if not mp3_buf:
+                    raise RuntimeError(f"Edge-TTS returned no audio data for voice {voice}")
+
+                pcm = await asyncio.to_thread(_mp3_to_pcm, bytes(mp3_buf), target_rate)
+                pcm_parts.extend(pcm.data)
+                if i < len(sentences) - 1:
+                    pcm_parts.extend(silence_between)
+
+            return PcmAudio(bytes(pcm_parts), target_rate, 1)
+        except Exception as exc:
+            logger.warning(
+                "Edge-TTS error (%s: %s). Falling back to offline Piper TTS.",
+                type(exc).__name__,
+                exc,
+            )
+            if self._piper_fallback.available():
+                return await self._piper_fallback.synthesize(
+                    cleaned, selected_lang, language_probability
+                )
+            raise
         finally:
             logger.info(
                 "Edge-TTS completed: latency_ms=%.1f voice=%s",

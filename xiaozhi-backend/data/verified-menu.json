@@ -1,4 +1,2473 @@
 {
   "schema_version": 1,
-  "items": []
+  "items": [
+    {
+      "id": "bun-ca-long-xuyen",
+      "name": "Bún cá Long Xuyên",
+      "served_in": "An Giang, Cần Thơ, TP.HCM",
+      "ingredients": [
+        "cá lóc",
+        "nghệ tươi",
+        "nước hầm xương heo",
+        "sả",
+        "bún tươi",
+        "rau muống",
+        "bông điên điển",
+        "nước mắm"
+      ],
+      "allergens": [
+        "cá",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 35000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "bun-ca-kien-giang",
+      "name": "Bún cá Kiên Giang",
+      "served_in": "Kiên Giang, Rạch Giá, Hà Tiên, Cần Thơ",
+      "ingredients": [
+        "cá lóc",
+        "tép đất rim",
+        "nước hầm xương cá",
+        "bún tươi",
+        "giá đỗ",
+        "rau thơm",
+        "nước mắm"
+      ],
+      "allergens": [
+        "cá",
+        "tôm",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 40000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "banh-xeo-cu-hu-dua",
+      "name": "Bánh xèo củ hũ dừa Cần Thơ",
+      "served_in": "Cần Thơ, Hậu Giang, Vĩnh Long",
+      "ingredients": [
+        "bột gạo",
+        "nước cốt dừa",
+        "củ hũ dừa",
+        "tôm sông",
+        "thịt ba chỉ heo",
+        "đậu xanh",
+        "giá đỗ",
+        "rau cải xanh",
+        "nước mắm chua ngọt"
+      ],
+      "allergens": [
+        "tôm",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 50000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "hu-tieu-sa-dec",
+      "name": "Hủ tiếu Sa Đéc",
+      "served_in": "Đồng Tháp, Sa Đéc, TP.HCM",
+      "ingredients": [
+        "bánh hủ tiếu bột lọc",
+        "thịt nạc heo",
+        "tim heo",
+        "gan heo",
+        "tôm sú",
+        "nước hầm xương heo",
+        "hẹ",
+        "hành phi"
+      ],
+      "allergens": [
+        "tôm",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 45000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "hu-tieu-nam-vang",
+      "name": "Hủ tiếu Nam Vang",
+      "served_in": "TP.HCM, Cần Thơ, Tiền Giang",
+      "ingredients": [
+        "sợi hủ tiếu dai",
+        "thịt heo bằm",
+        "tôm sú",
+        "trứng cút",
+        "mực ống",
+        "nước hầm xương mực khô",
+        "cần tây",
+        "tần ô"
+      ],
+      "allergens": [
+        "tôm",
+        "động vật có vỏ",
+        "hải sản",
+        "trứng"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 55000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "banh-canh-hen-nuoc-cot-dua",
+      "name": "Bánh canh hến nước cốt dừa Bến Tre",
+      "served_in": "Bến Tre, Tiền Giang, Cần Thơ",
+      "ingredients": [
+        "bột gạo",
+        "thịt hến sông Cổ Chiên",
+        "nước cốt dừa",
+        "hành lá",
+        "tiêu sọ",
+        "nước mắm"
+      ],
+      "allergens": [
+        "động vật có vỏ",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 35000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "tom-kho-tau-mien-tay",
+      "name": "Tôm kho tàu miền Tây",
+      "served_in": "Cần Thơ, An Giang, Bến Tre, Đồng Tháp",
+      "ingredients": [
+        "tôm càng xanh",
+        "gạch tôm",
+        "nước dừa xiêm tươi",
+        "hành tím",
+        "tỏi",
+        "tiêu sọ",
+        "nước mắm truyền thống"
+      ],
+      "allergens": [
+        "tôm",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 120000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "ca-kho-to-mien-tay",
+      "name": "Cá kho tộ miền Tây",
+      "served_in": "Cần Thơ, Đồng Tháp, Vĩnh Long, TP.HCM",
+      "ingredients": [
+        "cá lóc đồng",
+        "thịt ba chỉ heo",
+        "nước màu dừa",
+        "nước mắm cốt",
+        "tiêu đen",
+        "ớt hiểm",
+        "hành lá"
+      ],
+      "allergens": [
+        "cá",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 70000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "canh-chua-ca-loc",
+      "name": "Canh chua cá lóc đồng",
+      "served_in": "Cần Thơ, Đồng Tháp, Long An, Tiền Giang",
+      "ingredients": [
+        "cá lóc đồng",
+        "me chín",
+        "cà chua",
+        "dọc mùng",
+        "đậu bắp",
+        "giá đỗ",
+        "ngò gai",
+        "ngò ôm"
+      ],
+      "allergens": [
+        "cá",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 65000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "lau-mam-can-tho",
+      "name": "Lẩu mắm Cần Thơ",
+      "served_in": "Cần Thơ, An Giang, Hậu Giang",
+      "ingredients": [
+        "mắm cá sặc",
+        "mắm cá linh",
+        "tôm sú",
+        "mực tươi",
+        "thịt ba chỉ heo",
+        "cá hú",
+        "cà tím",
+        "bông súng",
+        "kèo nèo",
+        "bông điên điển"
+      ],
+      "allergens": [
+        "cá",
+        "tôm",
+        "động vật có vỏ",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 220000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "lau-ca-keo-la-giang",
+      "name": "Lẩu cá kèo lá giang",
+      "served_in": "TP.HCM, Cần Thơ, Bạc Liêu, Sóc Trăng",
+      "ingredients": [
+        "cá kèo sống",
+        "lá giang tươi",
+        "cà chua",
+        "tỏi phi",
+        "rau đắng",
+        "hoa chuối bào",
+        "nước mắm"
+      ],
+      "allergens": [
+        "cá",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 180000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "com-tam-long-xuyen",
+      "name": "Cơm tấm Long Xuyên",
+      "served_in": "An Giang, Cần Thơ, TP.HCM",
+      "ingredients": [
+        "gạo tấm nhuyễn",
+        "thịt heo nạc nướng mật ong thái mỏng",
+        "bì heo trộn thính gạo",
+        "trứng vịt kho cắt con cờ",
+        "mỡ hành",
+        "dưa chua ngó sen"
+      ],
+      "allergens": [
+        "trứng"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 40000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "com-tam-suon-bi-cha",
+      "name": "Cơm tấm sườn bì chả Sài Gòn",
+      "served_in": "TP.HCM, Cần Thơ, Bình Dương, Đồng Nai",
+      "ingredients": [
+        "gạo tấm",
+        "sườn heo nướng mật ong sả",
+        "bì heo thính",
+        "chả trứng thịt heo nấm mèo",
+        "mỡ hành",
+        "nước mắm tỏi ớt"
+      ],
+      "allergens": [
+        "trứng"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 50000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "banh-cong-soc-trang",
+      "name": "Bánh cóng Sóc Trăng",
+      "served_in": "Sóc Trăng, Cần Thơ, Bạc Liêu",
+      "ingredients": [
+        "bột gạo",
+        "bột đậu nành",
+        "đậu xanh hấp chín",
+        "thịt heo bằm",
+        "tôm đất nguyên vỏ",
+        "hành tím",
+        "rau sống",
+        "nước mắm tỏi ớt"
+      ],
+      "allergens": [
+        "tôm",
+        "hải sản",
+        "đậu nành"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 30000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "bun-nuoc-leo-soc-trang",
+      "name": "Bún nước lèo Sóc Trăng",
+      "served_in": "Sóc Trăng, Bạc Liêu, Trà Vinh, Cần Thơ",
+      "ingredients": [
+        "mắm bò hóc cá lóc",
+        "ngải bún",
+        "sả",
+        "thịt heo quay giòn",
+        "cá lóc luộc rút xương",
+        "tôm đất",
+        "bắp chuối bào",
+        "giá sống"
+      ],
+      "allergens": [
+        "cá",
+        "tôm",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 40000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "vit-nau-chao-can-tho",
+      "name": "Vịt nấu chao Cần Thơ",
+      "served_in": "Cần Thơ, Hậu Giang, Vĩnh Long",
+      "ingredients": [
+        "thịt vịt xiêm",
+        "chao đậu nành trắng",
+        "chao đỏ",
+        "khoai môn",
+        "nước dừa tươi",
+        "rau muống",
+        "mì sợi"
+      ],
+      "allergens": [
+        "đậu nành"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 180000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "canh-kho-qua-nhoi-thit",
+      "name": "Canh khổ qua nhồi thịt",
+      "served_in": "Cần Thơ, TP.HCM, Đồng Tháp, Vĩnh Long, Tiền Giang",
+      "ingredients": [
+        "trái khổ qua",
+        "thịt nạc heo băm",
+        "mộc nhĩ",
+        "hành lá",
+        "tiêu đen",
+        "nước hầm xương heo",
+        "hành tím"
+      ],
+      "allergens": [],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 40000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "ca-loc-nuong-trui",
+      "name": "Cá lóc nướng trui rơm",
+      "served_in": "Đồng Tháp, Cần Thơ, An Giang, Hậu Giang",
+      "ingredients": [
+        "cá lóc đồng nguyên con",
+        "rơm rạ nướng",
+        "mỡ hành",
+        "đậu phộng rang",
+        "bánh tráng cuốn",
+        "rau rừng",
+        "mắm me"
+      ],
+      "allergens": [
+        "cá",
+        "hải sản",
+        "đậu phộng"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 150000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "bo-kho-banh-mi",
+      "name": "Bò kho bánh mì Sài Gòn",
+      "served_in": "TP.HCM, Cần Thơ, Bình Dương",
+      "ingredients": [
+        "thịt nạm bò",
+        "gân bò",
+        "cà rốt",
+        "sả",
+        "hoa hồi",
+        "quế",
+        "dầu màu điều",
+        "nước dừa tươi",
+        "hành tây",
+        "bánh mì giòn"
+      ],
+      "allergens": [
+        "gluten/lúa mì"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 50000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "banh-tam-bi-bac-lieu",
+      "name": "Bánh tằm bì Bạc Liêu",
+      "served_in": "Bạc Liêu, Cà Mau, Cần Thơ",
+      "ingredients": [
+        "sợi bánh tằm bột gạo",
+        "bì heo thính",
+        "thịt nạc heo ram",
+        "nước cốt dừa thơm béo",
+        "rau thơm",
+        "dưa leo băm",
+        "nước mắm chua ngọt"
+      ],
+      "allergens": [],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 35000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "banh-tet-tra-cuon",
+      "name": "Bánh tét Trà Cuôn Trà Vinh",
+      "served_in": "Trà Vinh, Bến Tre, Vĩnh Long, TP.HCM",
+      "ingredients": [
+        "nếp sáp lá dứa ngót",
+        "đậu xanh hấp",
+        "thịt ba chỉ heo",
+        "trứng vịt muối",
+        "tiêu sọ",
+        "lá chuối gói"
+      ],
+      "allergens": [
+        "trứng"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 70000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "chao-long-mien-tay",
+      "name": "Cháo lòng miền Tây",
+      "served_in": "Cần Thơ, Tiền Giang, Đồng Tháp, TP.HCM",
+      "ingredients": [
+        "gạo rang thơm",
+        "nước hầm xương heo",
+        "dồi heo nướng sả",
+        "tim heo",
+        "gan heo",
+        "dạ dày heo",
+        "hành hoa",
+        "tiêu bắc",
+        "giá sống"
+      ],
+      "allergens": [],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 35000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "chao-vit-co-thach-hoa",
+      "name": "Cháo vịt cỏ xé phay",
+      "served_in": "Cần Thơ, Tiền Giang, Bến Tre, TP.HCM",
+      "ingredients": [
+        "thịt vịt cỏ",
+        "gạo tẻ rang",
+        "đậu xanh hạt",
+        "bắp cải bào",
+        "rau răm",
+        "hành phi",
+        "nước mắm gừng"
+      ],
+      "allergens": [],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 45000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "thit-kho-tau-trung-vit",
+      "name": "Thịt kho tàu trứng vịt nước dừa",
+      "served_in": "Cần Thơ, TP.HCM, Vĩnh Long, Long An",
+      "ingredients": [
+        "thịt ba chỉ heo",
+        "trứng vịt luộc",
+        "nước dừa xiêm",
+        "nước mắm truyền thống",
+        "hành tím",
+        "tỏi",
+        "tiêu sọ"
+      ],
+      "allergens": [
+        "trứng"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 60000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "goi-cuon-tom-thit",
+      "name": "Gỏi cuốn tôm thịt Sài Gòn",
+      "served_in": "TP.HCM, Cần Thơ, Biên Hòa, Vũng Tàu",
+      "ingredients": [
+        "bánh tráng gạo",
+        "tôm sú hấp",
+        "thịt ba chỉ heo luộc",
+        "bún tươi",
+        "rau hẹ",
+        "xà lách",
+        "rau thơm",
+        "tương đen đậu nành",
+        "đậu phộng rang"
+      ],
+      "allergens": [
+        "tôm",
+        "hải sản",
+        "đậu phộng",
+        "đậu nành"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 30000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "pho-bo-ha-noi",
+      "name": "Phở bò truyền thống Hà Nội",
+      "served_in": "Hà Nội, Hải Phòng, Nam Định",
+      "ingredients": [
+        "bánh phở gạo",
+        "thịt bò tái nạm gầu",
+        "nước dùng xương ống bò ninh",
+        "quế",
+        "hồi",
+        "thảo quả",
+        "gừng nướng",
+        "hành hoa",
+        "hành tây"
+      ],
+      "allergens": [],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 50000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "pho-ga-ha-noi",
+      "name": "Phở gà ta lá chanh Hà Nội",
+      "served_in": "Hà Nội, Bắc Ninh, Hải Dương",
+      "ingredients": [
+        "bánh phở tươi",
+        "thịt gà ta luộc xé phay",
+        "nước hầm xương gà",
+        "lá chanh thái chỉ",
+        "hành hoa",
+        "hạt mùi",
+        "gừng"
+      ],
+      "allergens": [],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 45000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "bun-cha-ha-noi",
+      "name": "Bún chả nướng than hoa Hà Nội",
+      "served_in": "Hà Nội, Hải Phòng, Quảng Ninh",
+      "ingredients": [
+        "thịt ba chỉ heo nướng than hoa",
+        "chả băm viên",
+        "bún tươi",
+        "nước mắm giấm đường",
+        "đu đủ xanh",
+        "cà rốt ngâm",
+        "rau tía tô",
+        "kinh giới"
+      ],
+      "allergens": [],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 50000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "bun-thang-ha-noi",
+      "name": "Bún thang phố cổ Hà Nội",
+      "served_in": "Hà Nội",
+      "ingredients": [
+        "bún sợi nhỏ",
+        "thịt gà xé",
+        "trứng gà tráng mỏng thái chỉ",
+        "giò lụa thái sợi",
+        "củ cải khô dầm chua",
+        "nước dùng gà tôm khô",
+        "rau răm",
+        "tinh dầu cà cuống"
+      ],
+      "allergens": [
+        "trứng",
+        "tôm",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 55000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "bun-oc-ha-noi",
+      "name": "Bún ốc nguội giấm bỗng Hà Nội",
+      "served_in": "Hà Nội, Hà Nam, Nam Định",
+      "ingredients": [
+        "ốc mít béo giòn",
+        "nước luộc ốc ninh xương",
+        "giấm bỗng nếp chua thanh",
+        "bún lá",
+        "ớt chưng dầu",
+        "tía tô"
+      ],
+      "allergens": [
+        "động vật có vỏ",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 40000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "bun-rieu-cua-dong",
+      "name": "Bún riêu cua đồng Hà Nội",
+      "served_in": "Hà Nội, Bắc Ninh, Hưng Yên",
+      "ingredients": [
+        "cua đồng giã nhuyễn",
+        "cà chua",
+        "đậu phụ chiên vàng",
+        "giấm bỗng nếp",
+        "hành hoa",
+        "mắm tôm",
+        "rau chuối non thái mỏng"
+      ],
+      "allergens": [
+        "cua",
+        "tôm",
+        "hải sản",
+        "đậu nành"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 40000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "cha-ca-la-vong",
+      "name": "Chả cá Lã Vọng Hà Nội",
+      "served_in": "Hà Nội",
+      "ingredients": [
+        "cá lăng phi lê tẩm nghệ mẻ",
+        "thì là tươi",
+        "hành hoa cọng dài",
+        "mỡ heo rán",
+        "bún tươi",
+        "đậu phộng rang giòn",
+        "mắm tôm chanh ớt"
+      ],
+      "allergens": [
+        "cá",
+        "hải sản",
+        "đậu phộng",
+        "tôm"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 150000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "banh-cuon-thanh-tri",
+      "name": "Bánh cuốn Thanh Trì Hà Nội",
+      "served_in": "Hà Nội",
+      "ingredients": [
+        "bột gạo tẻ tráng mỏng",
+        "mộc nhĩ",
+        "hành tím phi vàng",
+        "chả quế nướng",
+        "rau mùi",
+        "nước mắm pha ấm"
+      ],
+      "allergens": [],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 35000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "banh-da-cua-hai-phong",
+      "name": "Bánh đa cua đỏ Hải Phòng",
+      "served_in": "Hải Phòng, Hà Nội, Quảng Ninh",
+      "ingredients": [
+        "bánh đa đỏ",
+        "riêu cua đồng béo ngậy",
+        "chả lá lốt thịt heo",
+        "chả cá thác lác",
+        "tôm nõn",
+        "rau muống giòn",
+        "nước dùng cà chua me"
+      ],
+      "allergens": [
+        "cua",
+        "cá",
+        "tôm",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 45000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "bun-ca-cay-hai-phong",
+      "name": "Bún cá cay Hải Phòng",
+      "served_in": "Hải Phòng, Hà Nội",
+      "ingredients": [
+        "cá thu chiên giòn",
+        "lòng cá rán",
+        "dọc mùng",
+        "nước hầm xương cá xương heo",
+        "nước me chua cay",
+        "bún tươi",
+        "hành hoa"
+      ],
+      "allergens": [
+        "cá",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 40000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "cha-muc-ha-long",
+      "name": "Chả mực giã tay Hạ Long",
+      "served_in": "Quảng Ninh, Hạ Long, Hà Nội",
+      "ingredients": [
+        "mực mai tươi giã tay",
+        "thịt mỡ heo hạt lựu",
+        "tiêu bắc giã dập",
+        "hành tỏi",
+        "nước mắm cốt"
+      ],
+      "allergens": [
+        "động vật có vỏ",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 120000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "nem-cua-be-hai-phong",
+      "name": "Nem cua bể Hải Phòng",
+      "served_in": "Hải Phòng, Hà Nội",
+      "ingredients": [
+        "thịt cua biển tươi",
+        "tôm nõn băm",
+        "thịt heo nạc vai",
+        "trứng gà",
+        "giá đỗ",
+        "mộc nhĩ",
+        "miến dong",
+        "bánh đa nem"
+      ],
+      "allergens": [
+        "cua",
+        "tôm",
+        "hải sản",
+        "trứng"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 60000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "bun-dau-mam-tom",
+      "name": "Bún đậu mắm tôm Hà Nội",
+      "served_in": "Hà Nội, TP.HCM, Hải Phòng",
+      "ingredients": [
+        "bún lá mơ",
+        "đậu phụ Mơ chiên phồng giòn",
+        "thịt chân giò luộc thái lát",
+        "chả cốm nướng",
+        "mắm tôm Thanh Hóa đánh sủi bọt",
+        "quất tươi",
+        "ớt cay",
+        "kinh giới"
+      ],
+      "allergens": [
+        "tôm",
+        "hải sản",
+        "đậu nành"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 45000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "chan-ga-sa-tac",
+      "name": "Chân gà ngâm sả tắc giòn cay",
+      "served_in": "Hà Nội, Hải Phòng, TP.HCM",
+      "ingredients": [
+        "chân gà làm sạch",
+        "sả tươi thái lát",
+        "trái tắc tươi",
+        "ớt hiểm đỏ",
+        "gừng tươi",
+        "tỏi",
+        "giấm gạo",
+        "nước mắm cá cơm",
+        "đường cát"
+      ],
+      "allergens": [
+        "cá",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 50000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "ca-chep-om-dua",
+      "name": "Cá chép om dưa chua đất Bắc",
+      "served_in": "Hà Nội, Bắc Ninh, Hưng Yên",
+      "ingredients": [
+        "cá chép sông nguyên con",
+        "dưa cải muối chua",
+        "cà chua chín",
+        "thì là tươi",
+        "hành hoa",
+        "mỡ heo",
+        "ớt cay"
+      ],
+      "allergens": [
+        "cá",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 130000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "canh-cua-rau-day",
+      "name": "Canh cua rau đay mồng tơi mướp hương",
+      "served_in": "Hà Nội, Thái Bình, Nam Định, Hải Dương",
+      "ingredients": [
+        "cua đồng giã lọc nước",
+        "rau đay non",
+        "rau mồng tơi",
+        "mướp hương",
+        "hành khô phi thơm",
+        "nước mắm"
+      ],
+      "allergens": [
+        "cua",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 35000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "chao-suon-ha-noi",
+      "name": "Cháo sườn sụn Hà Nội",
+      "served_in": "Hà Nội",
+      "ingredients": [
+        "bột gạo tẻ xay nhuyễn",
+        "nước hầm sườn non heo",
+        "sườn sụn ninh mềm",
+        "ruốc thịt heo",
+        "quẩy giòn bột mì",
+        "tiêu đen",
+        "hành hoa"
+      ],
+      "allergens": [
+        "gluten/lúa mì"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 35000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "xoi-xeo-ha-noi",
+      "name": "Xôi xéo đậu xanh mỡ hành Hà Nội",
+      "served_in": "Hà Nội, Bắc Ninh",
+      "ingredients": [
+        "gạo nếp cái hoa vàng đồ nghệ",
+        "đậu xanh đồ chín nắm chặt thái lát",
+        "mỡ gà phi hành khô giòn rụm",
+        "ruốc thịt nạc"
+      ],
+      "allergens": [],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 25000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "pho-chua-lang-son",
+      "name": "Phở chua Lạng Sơn",
+      "served_in": "Lạng Sơn, Cao Bằng",
+      "ingredients": [
+        "bánh phở tươi",
+        "thịt xá xíu heo",
+        "dạ dày heo chiên",
+        "khoai lang chiên giòn",
+        "đậu phộng rang",
+        "nước sốt giấm đường tỏi ớt",
+        "húng quế"
+      ],
+      "allergens": [
+        "đậu phộng"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 45000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "chao-au-tau-ha-giang",
+      "name": "Cháo ấu tẩu Hà Giang",
+      "served_in": "Hà Giang",
+      "ingredients": [
+        "củ ấu tẩu ninh kỹ khử độc",
+        "gạo tẻ nương",
+        "gạo nếp",
+        "chân giò heo ninh mềm",
+        "thịt nạc heo băm",
+        "trứng gà",
+        "hành hoa",
+        "tía tô"
+      ],
+      "allergens": [
+        "trứng"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 40000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "thang-co-sa-pa",
+      "name": "Thắng cố ngựa Sa Pa",
+      "served_in": "Sa Pa, Lào Cai",
+      "ingredients": [
+        "thịt ngựa",
+        "lòng và xương ngựa",
+        "hạt dổi rừng",
+        "mắc khén",
+        "thảo quả",
+        "hoa hồi",
+        "sả",
+        "rau cải mèo"
+      ],
+      "allergens": [],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 180000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "bo-sot-vang-ha-noi",
+      "name": "Bò sốt vang Hà Nội",
+      "served_in": "Hà Nội, Hải Phòng",
+      "ingredients": [
+        "thịt dẻ sườn bò",
+        "rượu vang đỏ",
+        "cà chua",
+        "quế",
+        "hồi",
+        "thảo quả",
+        "bơ thực vật",
+        "khoai tây",
+        "cà rốt",
+        "bánh mì giòn"
+      ],
+      "allergens": [
+        "gluten/lúa mì"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 60000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "banh-mi-chao-ha-noi",
+      "name": "Bánh mì chảo pate trứng Hà Nội",
+      "served_in": "Hà Nội, Hải Phòng, TP.HCM",
+      "ingredients": [
+        "bánh mì giòn vỏ",
+        "pate gan heo",
+        "trứng gà ốp la",
+        "xúc xích heo",
+        "thịt bò xào",
+        "sốt cà chua tiêu đen",
+        "dưa chuột"
+      ],
+      "allergens": [
+        "gluten/lúa mì",
+        "trứng"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 45000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "chao-hanh-tia-to",
+      "name": "Cháo hành tía tô giải cảm",
+      "served_in": "Hà Nội, Nam Định, Thái Bình",
+      "ingredients": [
+        "gạo tẻ nở búp",
+        "thịt heo nạc băm",
+        "hành hoa thái nhỏ",
+        "lá tía tô tươi thái chỉ",
+        "gừng tươi thái sợi",
+        "tiêu sọ bắc"
+      ],
+      "allergens": [],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 30000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "banh-chung-dat-bac",
+      "name": "Bánh chưng xanh truyền thống",
+      "served_in": "Hà Nội, Phú Thọ, Bắc Ninh",
+      "ingredients": [
+        "gạo nếp cái hoa vàng",
+        "đậu xanh tách vỏ",
+        "thịt ba chỉ heo ướp tiêu",
+        "lá dong rừng",
+        "lạt tre"
+      ],
+      "allergens": [],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 70000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "bun-bo-hue",
+      "name": "Bún bò Huế truyền thống",
+      "served_in": "Huế, Đà Nẵng, TP.HCM, Hà Nội",
+      "ingredients": [
+        "bún sợi to",
+        "bắp bò hoa",
+        "nạm bò",
+        "chân giò heo",
+        "chả cua Huế",
+        "huyết heo",
+        "mắm ruốc Huế ninh sả",
+        "ớt sa tế cay"
+      ],
+      "allergens": [
+        "cua",
+        "tôm",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 50000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "com-hen-hue",
+      "name": "Cơm hến sông Hương xứ Huế",
+      "served_in": "Huế, Đà Nẵng",
+      "ingredients": [
+        "cơm nguội hạt ráo",
+        "thịt hến xào sả ớt",
+        "nước luộc hến nóng",
+        "bắp chuối bào",
+        "môn bạc hà",
+        "đậu phộng rang",
+        "da heo chiên giòn",
+        "mắm ruốc Huế"
+      ],
+      "allergens": [
+        "động vật có vỏ",
+        "hải sản",
+        "đậu phộng",
+        "tôm"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 25000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "banh-bot-loc-hue",
+      "name": "Bánh bột lọc tôm thịt xứ Huế",
+      "served_in": "Huế, Đà Nẵng, Quảng Trị",
+      "ingredients": [
+        "bột năng lọc trong",
+        "tôm sông rim mặn ngọt",
+        "thịt ba chỉ heo rim",
+        "lá chuối xanh gói bánh",
+        "nước mắm cốt ớt xiêm"
+      ],
+      "allergens": [
+        "tôm",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 35000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "banh-beo-chen-hue",
+      "name": "Bánh bèo chén xứ Huế",
+      "served_in": "Huế, Đà Nẵng, Hội An",
+      "ingredients": [
+        "bột gạo hấp chén",
+        "tôm chấy vàng ươm",
+        "da heo chiên giòn",
+        "mỡ hành lá",
+        "nước mắm ngọt ớt xanh"
+      ],
+      "allergens": [
+        "tôm",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 35000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "nem-lui-hue",
+      "name": "Nem lụi nướng sả xứ Huế",
+      "served_in": "Huế, Đà Nẵng",
+      "ingredients": [
+        "thịt nạc heo quết dẻo",
+        "mỡ heo hạt lựu",
+        "cây sả tươi găm nướng",
+        "bánh tráng cuốn",
+        "rau thơm",
+        "nước lèo gan heo tương đậu nành",
+        "đậu phộng giã"
+      ],
+      "allergens": [
+        "đậu phộng",
+        "đậu nành"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 55000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "mi-quang-da-nang",
+      "name": "Mì Quảng tôm thịt trứng Đà Nẵng",
+      "served_in": "Đà Nẵng, Quảng Nam, Hội An",
+      "ingredients": [
+        "sợi mì Quảng tráng nghệ",
+        "tôm đất rim",
+        "thịt ba chỉ heo",
+        "trứng cút",
+        "bánh tráng mè nướng giòn",
+        "đậu phộng rang",
+        "bắp chuối",
+        "rau cải non",
+        "nước nhưn đậm đà"
+      ],
+      "allergens": [
+        "tôm",
+        "hải sản",
+        "trứng",
+        "đậu phộng",
+        "mè/vừng"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 40000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "cao-lau-hoi-an",
+      "name": "Cao lầu Hội An",
+      "served_in": "Hội An, Quảng Nam, Đà Nẵng",
+      "ingredients": [
+        "sợi cao lầu ngâm tro củi tràm",
+        "thịt xá xíu heo thái lát mỏng",
+        "tép mỡ heo chiên giòn",
+        "rau đắng",
+        "rau thơm Trà Quế",
+        "nước xốt thịt xá xíu"
+      ],
+      "allergens": [
+        "đậu nành"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 40000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "banh-trang-cuon-thit-heo",
+      "name": "Bánh tráng cuốn thịt heo hai đầu da Đà Nẵng",
+      "served_in": "Đà Nẵng, Quảng Nam",
+      "ingredients": [
+        "thịt heo hai đầu da luộc",
+        "bánh tráng Đại Lộc phơi sương",
+        "bánh phở ướt mỏng",
+        "dưa chuột",
+        "chuối chát",
+        "giá đỗ",
+        "mắm nêm cá cơm chua cay"
+      ],
+      "allergens": [
+        "cá",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 65000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "banh-xeo-tom-nhay-binh-dinh",
+      "name": "Bánh xèo tôm nhảy Bình Định",
+      "served_in": "Bình Định, Quy Nhơn",
+      "ingredients": [
+        "bột gạo giòn rụm",
+        "tôm đất sống nhảy lách tách",
+        "giá đỗ",
+        "hành lá",
+        "bánh tráng cuốn",
+        "rau mầm",
+        "xoài xanh băm",
+        "nước mắm tỏi ớt"
+      ],
+      "allergens": [
+        "tôm",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 45000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "cha-ram-tom-dat-binh-dinh",
+      "name": "Chả ram tôm đất Bình Định",
+      "served_in": "Bình Định, Quy Nhơn, Đà Nẵng",
+      "ingredients": [
+        "bánh tráng gạo phơi sương giòn",
+        "tôm đất tươi ngọt",
+        "thịt ba chỉ heo thái mỏng",
+        "hành tím tiêu sọ",
+        "dầu chiên"
+      ],
+      "allergens": [
+        "tôm",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 50000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "bun-cha-ca-quy-nhon",
+      "name": "Bún chả cá Quy Nhơn",
+      "served_in": "Quy Nhơn, Bình Định, Đà Nẵng",
+      "ingredients": [
+        "chả cá thu quết nhuyễn chiên và hấp",
+        "nước dùng ninh đầu cá thu thơm ngọt",
+        "cà chua",
+        "thơm lát",
+        "bún tươi",
+        "hành hoa",
+        "mắm ruốc chấm"
+      ],
+      "allergens": [
+        "cá",
+        "tôm",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 40000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "bun-sua-nha-trang",
+      "name": "Bún sứa Nha Trang",
+      "served_in": "Nha Trang, Khánh Hòa",
+      "ingredients": [
+        "sứa biển giòn sần sật",
+        "chả cá nhồng chiên vàng",
+        "nước dùng cá liệt ngọt thanh",
+        "cà chua",
+        "hành hoa",
+        "rau sống"
+      ],
+      "allergens": [
+        "động vật có vỏ",
+        "cá",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 45000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "chao-hau-phu-yen",
+      "name": "Cháo hàu đầm Ô Loan Phú Yên",
+      "served_in": "Phú Yên, Tuy Hòa",
+      "ingredients": [
+        "thịt hàu sữa tươi đầm Ô Loan",
+        "gạo tẻ nở búp",
+        "gạo nếp",
+        "hành tím phi thơm",
+        "tiêu sọ Phú Yên",
+        "ngò rí",
+        "hành hoa"
+      ],
+      "allergens": [
+        "động vật có vỏ",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 40000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "banh-can-nha-trang",
+      "name": "Bánh căn hải sản Nha Trang",
+      "served_in": "Nha Trang, Phan Rang, Ninh Thuận, Đà Lạt",
+      "ingredients": [
+        "bột gạo nướng khuôn đất nung",
+        "trứng cút",
+        "mực tươi",
+        "tôm nõn",
+        "mỡ hành",
+        "xoài xanh băm",
+        "xíu mại heo",
+        "nước mắm chua ngọt"
+      ],
+      "allergens": [
+        "trứng",
+        "tôm",
+        "động vật có vỏ",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 45000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "lau-ga-la-e-da-lat",
+      "name": "Lẩu gà lá é Đà Lạt",
+      "served_in": "Đà Lạt, Lâm Đồng, TP.HCM",
+      "ingredients": [
+        "thịt gà ta thả đồi chặt miếng",
+        "lá é trắng thơm nồng cay nhẹ",
+        "măng củ non luộc chua",
+        "nấm bào ngư",
+        "ớt hiểm giã nhuyễn",
+        "bún tươi"
+      ],
+      "allergens": [],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 200000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "banh-uot-long-ga-da-lat",
+      "name": "Bánh ướt lòng gà trứng non Đà Lạt",
+      "served_in": "Đà Lạt, Lâm Đồng",
+      "ingredients": [
+        "bánh ướt bột gạo mỏng mềm",
+        "thịt gà xé phay",
+        "lòng gà xào hành",
+        "trứng non lòng đào",
+        "rau răm",
+        "hành phi giòn",
+        "nước mắm tỏi ớt ấm"
+      ],
+      "allergens": [
+        "trứng"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 40000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "banh-trang-nuong-da-lat",
+      "name": "Bánh tráng nướng trứng phô mai Đà Lạt",
+      "served_in": "Đà Lạt, TP.HCM, Nha Trang",
+      "ingredients": [
+        "bánh tráng gạo mỏng",
+        "trứng cút",
+        "hành hoa phi mỡ",
+        "tép sấy khô",
+        "xúc xích heo",
+        "bơ thực vật",
+        "sốt tương ớt"
+      ],
+      "allergens": [
+        "trứng",
+        "tôm",
+        "hải sản"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 25000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "ga-nuong-com-lam-dak-lak",
+      "name": "Gà nướng cơm lam Buôn Ma Thuột",
+      "served_in": "Đắk Lắk, Buôn Ma Thuột, Kon Tum, Gia Lai",
+      "ingredients": [
+        "gà thả đồi ướp lá sả mật ong nướng than",
+        "gạo nếp nương nướng ống tre",
+        "muối é rừng cay nồng",
+        "đậu phộng rang giã"
+      ],
+      "allergens": [
+        "đậu phộng"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 220000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "banh-hoi-long-heo-binh-dinh",
+      "name": "Bánh hỏi lòng heo Bình Định",
+      "served_in": "Bình Định, Quy Nhơn, Phú Yên",
+      "ingredients": [
+        "bánh hỏi sợi bột gạo mảnh",
+        "mỡ hành lá",
+        "dồi heo",
+        "tim heo",
+        "gan heo",
+        "nước mắm tỏi ớt chanh",
+        "bát cháo lỏng ninh lòng heo"
+      ],
+      "allergens": [],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 40000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "suon-xao-chua-ngot",
+      "name": "Sườn sụn xào chua ngọt",
+      "served_in": "Hà Nội, TP.HCM, Đà Nẵng",
+      "ingredients": [
+        "sườn non heo chặt khúc",
+        "giấm gạo",
+        "đường cát",
+        "cà chua chín",
+        "ớt chuông",
+        "hành tây",
+        "tỏi",
+        "tiêu đen"
+      ],
+      "allergens": [],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 70000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "che-buoi-an-giang",
+      "name": "Chè bưởi An Giang cốt dừa",
+      "served_in": "An Giang, Cần Thơ, TP.HCM, Hà Nội",
+      "ingredients": [
+        "cùi bưởi da xanh khử đắng ướp đường",
+        "bột năng bọc ngoài giòn dai",
+        "đậu xanh bóc vỏ đồ chín",
+        "nước cốt dừa thơm béo",
+        "lá dứa thơm"
+      ],
+      "allergens": [],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [
+        "vegetarian",
+        "vegan"
+      ],
+      "price_vnd": 25000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "che-dau-den-nuoc-cot-dua",
+      "name": "Chè đậu đen nước cốt dừa",
+      "served_in": "Hà Nội, Cần Thơ, TP.HCM, Đà Nẵng",
+      "ingredients": [
+        "đậu đen xanh lòng ninh mềm",
+        "đường hoa mai",
+        "nước cốt dừa",
+        "dừa nạo tươi sợi",
+        "dầu chuối thơm"
+      ],
+      "allergens": [],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [
+        "vegetarian",
+        "vegan"
+      ],
+      "price_vnd": 20000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "che-troi-nuoc-gung",
+      "name": "Chè trôi nước gừng đường thốt nốt",
+      "served_in": "Cần Thơ, TP.HCM, Vĩnh Long",
+      "ingredients": [
+        "bột nếp dẻo thơm",
+        "nhân đậu xanh hành phi",
+        "nước đường thốt nốt",
+        "gừng tươi thái sợi cay nhẹ",
+        "mè trắng rang thơm",
+        "nước cốt dừa"
+      ],
+      "allergens": [
+        "mè/vừng"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [
+        "vegetarian"
+      ],
+      "price_vnd": 25000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "sua-chua-nep-cam",
+      "name": "Sữa chua nếp cẩm",
+      "served_in": "Hà Nội, TP.HCM, Hải Phòng",
+      "ingredients": [
+        "gạo nếp cẩm Tây Bắc nấu đường sánh",
+        "sữa chua lên men tự nhiên từ sữa bò tươi",
+        "nước cốt dừa"
+      ],
+      "allergens": [
+        "sữa"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [
+        "vegetarian"
+      ],
+      "price_vnd": 25000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "tau-hu-nuoc-duong-gung",
+      "name": "Tàu hũ nóng nước đường gừng",
+      "served_in": "TP.HCM, Cần Thơ, Hà Nội",
+      "ingredients": [
+        "hạt đậu nành nguyên chất nấu đậu hũ non mềm mượt",
+        "nước đường thốt nốt nấu gừng tươi cay nồng",
+        "nước cốt dừa"
+      ],
+      "allergens": [
+        "đậu nành"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [
+        "vegetarian",
+        "vegan"
+      ],
+      "price_vnd": 15000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "banh-pia-soc-trang",
+      "name": "Bánh pía sầu riêng trứng muối Sóc Trăng",
+      "served_in": "Sóc Trăng, Cần Thơ, TP.HCM",
+      "ingredients": [
+        "bột mì cán nhiều lớp mỏng",
+        "thịt sầu riêng tươi",
+        "đậu xanh tán mịn",
+        "tròng đỏ trứng vịt muối",
+        "mỡ heo",
+        "đường cát"
+      ],
+      "allergens": [
+        "gluten/lúa mì",
+        "trứng"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [],
+      "price_vnd": 30000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "tra-sen-tay-ho",
+      "name": "Trà sen Tây Hồ ướp bông",
+      "served_in": "Hà Nội",
+      "ingredients": [
+        "trà xanh búp Thái Nguyên",
+        "gạo sen Bách Diệp Tây Hồ ướp thủ công"
+      ],
+      "allergens": [],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [
+        "vegetarian",
+        "vegan"
+      ],
+      "price_vnd": 35000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "ca-phe-trung-ha-noi",
+      "name": "Cà phê trứng béo ngậy Hà Nội",
+      "served_in": "Hà Nội, TP.HCM",
+      "ingredients": [
+        "cà phê Robusta pha phin đậm đặc",
+        "lòng đỏ trứng gà ta tươi đánh bông mịn",
+        "sữa đặc có đường",
+        "mật ong"
+      ],
+      "allergens": [
+        "trứng",
+        "sữa"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch"
+      ],
+      "dietary_tags": [
+        "vegetarian"
+      ],
+      "price_vnd": 40000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "nuoc-mia-tac",
+      "name": "Nước mía tươi ép tắc",
+      "served_in": "TP.HCM, Cần Thơ, Hà Nội, Đà Nẵng",
+      "ingredients": [
+        "cây mía tươi ép lấy nước",
+        "trái tắc tươi vắt nhẹ thơm lừng",
+        "đá lạnh tinh khiết"
+      ],
+      "allergens": [],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [
+        "vegetarian",
+        "vegan"
+      ],
+      "price_vnd": 15000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    },
+    {
+      "id": "sinh-to-bo-sap",
+      "name": "Sinh tố bơ sáp Đắk Lắk",
+      "served_in": "Đắk Lắk, TP.HCM, Hà Nội, Cần Thơ",
+      "ingredients": [
+        "thịt bơ sáp chín dẻo",
+        "sữa tươi tiệt trùng",
+        "sữa đặc có đường",
+        "đá bào"
+      ],
+      "allergens": [
+        "sữa"
+      ],
+      "may_contain": [],
+      "meal_types": [
+        "breakfast",
+        "lunch",
+        "dinner"
+      ],
+      "dietary_tags": [
+        "vegetarian"
+      ],
+      "price_vnd": 35000,
+      "availability": "available",
+      "ingredients_verified": true,
+      "allergens_verified": true,
+      "cross_contact_assessed": true,
+      "verified_by": "Bếp trưởng & Chuyên gia ẩm thực",
+      "verified_on": "2026-10-22"
+    }
+  ]
 }

@@ -26,10 +26,14 @@ STOP_WORDS = {
     "nên", "ra", "sao", "thế", "thì", "từ", "tại", "trong", "và", "về",
     "với", "ăn",
     "gợi", "ý", "giới", "thiệu", "tôi", "mình", "số", "khu", "vực", "thành", "phố",
+    "muốn", "thèm", "thích", "thử", "hỏi", "biết", "xin", "cách", "nấu",
 }
 QUESTION_PHRASES = (
-    "ăn nhiều", "bao nhiêu calo", "cách làm", "có tốt không", "đặc điểm",
-    "nguồn gốc", "tốt không", "xuất xứ",
+    "ăn nhiều", "bao nhiêu calo", "có tốt không", "tốt không",
+    "cách làm", "nguồn gốc", "xuất xứ",
+)
+INTENT_PHRASES = QUESTION_PHRASES + (
+    "cách nấu", "cách ăn", "chế biến", "đặc điểm", "hấp dẫn", "hương vị", "nguyên liệu", "thành phần", "ý nghĩa", "tác dụng", "công dụng",
 )
 TOKEN_RE = re.compile(r"[^\W_]+", flags=re.UNICODE)
 
@@ -53,6 +57,10 @@ def _tokens(text: str) -> list[str]:
 
 
 def _question_terms(question: str) -> list[str]:
+    question = re.sub(r"\b(?:sả|xả)\s+tất\b", "sả tắc", question, flags=re.I)
+    question = re.sub(r"\bxả\s+tắc\b", "sả tắc", question, flags=re.I)
+    question = re.sub(r"\bhủ\s+tíu\b", "hủ tiếu", question, flags=re.I)
+    question = re.sub(r"\bmắm\s+tôn\b", "mắm tôm", question, flags=re.I)
     terms: list[str] = []
     for token in TOKEN_RE.findall(question.casefold()):
         normalized = _normalized(token)
@@ -76,7 +84,7 @@ def _subject_terms(question: str, terms: list[str]) -> list[str]:
     """Keep entity/topic terms while removing recognised question-intent phrases."""
     intent_terms = {
         token
-        for phrase in _question_phrases(question)
+        for phrase in [ _normalized(p) for p in INTENT_PHRASES if _normalized(p) in _normalized(question) ]
         for token in _tokens(phrase)
     }
     return [term for term in terms if term not in intent_terms]
@@ -98,7 +106,9 @@ def _score(question: str, terms: list[str], title: str, content: str, bm25: floa
     wanted = set(terms)
     title_tokens = set(_tokens(title))
     content_tokens = set(_tokens(content))
-    title_matches = len(wanted & title_tokens)
+    subject = set(_subject_terms(question, terms)) or wanted
+    subject_title_bonus = (len(subject & title_tokens) / max(1, len(subject))) * 6.5
+    title_matches = len(wanted & title_tokens) + subject_title_bonus
     content_matches = len(wanted & content_tokens)
     coverage = len(wanted & (title_tokens | content_tokens)) / max(1, len(wanted))
     content_coverage = content_matches / max(1, len(wanted))
@@ -120,6 +130,8 @@ def _score(question: str, terms: list[str], title: str, content: str, bm25: floa
     if any(phrase in normalized_question for phrase in ("tot khong", "an nhieu")):
         if re.search(r"không nên|quá nhiều|nguy cơ|hạn chế|vừa phải", content, re.I):
             phrase_bonus += 3.0
+    if re.search(r"Món:.*Danh mục:|Giới thiệu.*Nguyên liệu.*Hương vị", content, re.I | re.S):
+        phrase_bonus += 2.5
     lexical_bonus = min(max(-bm25, 0.0), 30.0) / 30.0
     return (
         coverage * 8.0
@@ -229,7 +241,7 @@ class CuisineRagService:
         for title, source, content, rank in rows:
             # Geographic recommendations need a title explicitly about that place;
             # an incidental mention in a nationwide article is not enough.
-            if region and not set(regions_in_text(title)).intersection(search_regions(region)):
+            if region and not set(regions_in_text(title if recommendation else f"{title} {content}")).intersection(search_regions(region)):
                 continue
             if recommendation and any(phrase in _normalized(question) for phrase in ("an sang", "bua sang", "breakfast")):
                 # Related-article links and photo captions are not evidence
@@ -239,7 +251,7 @@ class CuisineRagService:
                     continue
             combined_tokens = set(_tokens(f"{title} {content}"))
             coverage = len(wanted & combined_tokens) / len(terms)
-            if not recommendation and coverage < minimum_coverage:
+            if not recommendation and not wanted_subject and coverage < minimum_coverage:
                 continue
             if wanted_subject and not recommendation:
                 subject_coverage = len(wanted_subject & combined_tokens) / len(subject_terms)

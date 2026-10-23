@@ -13,7 +13,7 @@ get_settings.cache_clear()
 
 @pytest.fixture(autouse=True)
 def clean_settings(monkeypatch: pytest.MonkeyPatch):
-    monkeypatch.setenv("PUBLIC_WS_URL", "ws://172.20.10.2:8000/xiaozhi/v1/")
+    monkeypatch.setenv("PUBLIC_WS_URL", "ws://192.168.1.86:8000/xiaozhi/v1/")
     monkeypatch.setenv("XIAOZHI_SERVER_SAMPLE_RATE", "24000")
     monkeypatch.setenv("XIAOZHI_FRAME_DURATION_MS", "60")
     monkeypatch.setenv("MAX_AUDIO_SECONDS", "30")

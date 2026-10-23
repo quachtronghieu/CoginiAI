@@ -34,7 +34,8 @@ Mở PowerShell trên máy tính:
 ```powershell
 ipconfig
 ```
-Tìm adapter Wi-Fi đang kết nối, ghi lại dòng **IPv4 Address** (Ví dụ: `192.168.1.50` hoặc `172.20.10.2`).
+Tìm adapter Wi-Fi đang kết nối, ghi lại dòng **IPv4 Address**.
+*(IP hiện tại của máy phát triển: `192.168.1.13`.)*
 
 ### Bước 2: Cập nhật địa chỉ IP trong các file
 
@@ -45,33 +46,37 @@ Bạn cần cập nhật IP mới vào **2 file chính sau**:
    ```env
    PUBLIC_WS_URL=ws://<IP_MOI>:8000/xiaozhi/v1/
    ```
-   *(Ví dụ: `PUBLIC_WS_URL=ws://192.168.1.50:8000/xiaozhi/v1/`)*
+   *(Máy hiện tại: `PUBLIC_WS_URL=ws://192.168.1.13:8000/xiaozhi/v1/`)*
 
 2. **`xiaozhi-esp32\sdkconfig`** (Bắt buộc cho ESP32):
-   Mở file `xiaozhi-esp32\sdkconfig`, tìm dòng `CONFIG_OTA_URL` và cập nhật:
+   File này chỉ xuất hiện sau khi chạy `idf.py set-target` / `idf.py menuconfig`. Đổi qua menuconfig (**Xiaozhi Assistant → Default OTA URL**) hoặc tìm dòng `CONFIG_OTA_URL` và cập nhật:
    ```properties
    CONFIG_OTA_URL="http://<IP_MOI>:8000/xiaozhi/ota/"
    ```
-   *(Ví dụ: `CONFIG_OTA_URL="http://192.168.1.50:8000/xiaozhi/ota/"`)*
+   *(Máy hiện tại: `CONFIG_OTA_URL="http://192.168.1.13:8000/xiaozhi/ota/"`)*
+
+   > Giá trị mặc định nằm trong `xiaozhi-esp32\main\Kconfig.projbuild` (`config OTA_URL`).
 
 3. *(Tùy chọn khi chạy automated test)* **`xiaozhi-backend\tests\conftest.py`**:
    Sửa dòng:
    ```python
-   public_ws_url="ws://<IP_MOI>:8000/xiaozhi/v1/",
+   monkeypatch.setenv("PUBLIC_WS_URL", "ws://<IP_MOI>:8000/xiaozhi/v1/")
    ```
 
 ### Bước 3: Nạp lại firmware cho ESP32 (Nếu ESP32 chưa nhận IP mới)
-Nếu ESP32 chưa lưu cấu hình hoặc cần nạp lại:
+Nếu ESP32 chưa lưu cấu hình hoặc cần nạp lại (ESP-IDF trên máy: `C:\esp\v5.5.5\esp-idf`):
 ```powershell
-cd xiaozhi-esp32
-idf.py build flash monitor
+C:\esp\v5.5.5\esp-idf\export.ps1
+cd D:\coniAI\CoginiAI\xiaozhi-esp32
+idf.py -p COMx build flash monitor
 ```
+*(Thay `COMx` bằng cổng thật của ESP32 trong Device Manager → Ports (COM & LPT).)*
 
 ---
 
 ## 3. Cài Đặt Trên Máy Tính Có GPU NVIDIA Mới
 
-Dự án sử dụng GPU NVIDIA (RTX 3050, 4060, 3060, 4070...) để chạy **Faster-Whisper ASR** tốc độ cao (< 0.3s) và **Ollama LLM**.
+Dự án sử dụng GPU NVIDIA (máy hiện tại: **RTX 4060 Laptop 8GB**) để chạy **Faster-Whisper ASR** tốc độ cao (< 0.3s) và **Ollama LLM**.
 
 ### Bước 1: Cài đặt Driver NVIDIA & CUDA
 - Cài đặt bản [NVIDIA Driver](https://www.nvidia.com/download/index.aspx) mới nhất.
@@ -81,10 +86,10 @@ Dự án sử dụng GPU NVIDIA (RTX 3050, 4060, 3060, 4070...) để chạy **F
   ```
 
 ### Bước 2: Cài đặt Python & Cấu hình Môi trường ảo (.venv)
-- Khuyên dùng **Python 3.10, 3.11 hoặc 3.12** (hoặc 3.14 trên Windows).
-- Tạo môi trường ảo mới tại thư mục gốc dự án:
+- Máy hiện tại dùng **Python 3.14.5** tại `C:\Users\<Username>\AppData\Local\Programs\Python\Python314`. Nếu thư viện nào chưa có bản cho 3.14, cài thêm Python 3.12 và tạo venv bằng `py -3.12 -m venv .venv`.
+- Tạo môi trường ảo trong thư mục backend:
   ```powershell
-  cd D:\4\xiaozhi-team-source
+  cd D:\coniAI\CoginiAI\xiaozhi-backend
   python -m venv .venv
   .\.venv\Scripts\Activate.ps1
   ```
@@ -94,17 +99,18 @@ Dự án sử dụng GPU NVIDIA (RTX 3050, 4060, 3060, 4070...) để chạy **F
 > Nếu bạn copy toàn bộ thư mục dự án chứa sẵn `.venv` sang một máy tính khác (hoặc đổi tên thư mục/ổ đĩa), Python sẽ bị lỗi do đường dẫn tuyệt đối trong file `pyvenv.cfg` không khớp với máy mới:
 > 
 > **Cách xử lý 1 (Sửa trực tiếp `pyvenv.cfg`):**
-> Mở file `.venv\pyvenv.cfg` (và `xiaozhi-backend\.venv\pyvenv.cfg` nếu có), dùng lệnh `where python` trong PowerShell để tìm đường dẫn Python máy bạn, sau đó cập nhật lại các dòng:
+> Mở file `xiaozhi-backend\.venv\pyvenv.cfg`, dùng lệnh `where python` trong PowerShell để tìm đường dẫn Python máy bạn, sau đó cập nhật lại các dòng (giá trị dưới đây là của máy hiện tại):
 > ```ini
-> home = C:\Users\<Username_Của_Bạn>\AppData\Local\Programs\Python\Python314
+> home = C:\Users\<Username>\AppData\Local\Programs\Python\Python314
 > include-system-site-packages = false
 > version = 3.14.5
-> executable = C:\Users\<Username_Của_Bạn>\AppData\Local\Programs\Python\Python314\python.exe
-> command = C:\Users\<Username_Của_Bạn>\AppData\Local\Programs\Python\Python314\python.exe -m venv <Đường_Dẫn_Dự_Án_Hiện_Tại>\.venv
+> executable = C:\Users\<Username>\AppData\Local\Programs\Python\Python314\python.exe
+> command = C:\Users\<Username>\AppData\Local\Programs\Python\Python314\python.exe -m venv <�u?ng_D?n_D?_�n>\xiaozhi-backend\.venv
 > ```
 > 
 > **Cách xử lý 2 (Khuyên dùng - Tạo lại venv sạch):**
 > ```powershell
+> cd D:\coniAI\CoginiAI\xiaozhi-backend
 > Remove-Item -Recurse -Force .venv
 > python -m venv .venv
 > .\.venv\Scripts\Activate.ps1
@@ -123,7 +129,7 @@ python -c "import torch; print('CUDA Available:', torch.cuda.is_available(), '| 
 
 ### Bước 4: Cài đặt Dependencies Backend
 ```powershell
-cd xiaozhi-backend
+cd D:\coniAI\CoginiAI\xiaozhi-backend
 pip install -r requirements.txt
 ```
 
@@ -197,8 +203,8 @@ TTS_DEFAULT_LANGUAGE=vi
 ### Bước 2: Khởi động Backend
 Mở PowerShell tại thư mục `xiaozhi-backend`:
 ```powershell
-cd D:\4\xiaozhi-team-source\xiaozhi-backend
-..\.venv\Scripts\Activate.ps1
+cd D:\coniAI\CoginiAI\xiaozhi-backend
+.\.venv\Scripts\Activate.ps1
 python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
 ```
 Khi khởi động thành công, màn hình sẽ hiển thị:
@@ -211,7 +217,7 @@ INFO:     Uvicorn running on http://0.0.0.0:8000
 
 ### Bước 3: Bật ESP32
 - Cắm nguồn cho bo mạch ESP32.
-- ESP32 sẽ tự động kết nối Wi-Fi và kết nối WebSocket đến `ws://<IP>:8000/xiaozhi/v1/`.
+- ESP32 sẽ tự động kết nối Wi-Fi và kết nối WebSocket đến `ws://<IP>:8000/xiaozhi/v1/` (máy hiện tại: `ws://192.168.1.13:8000/xiaozhi/v1/`).
 - Màn hình LCD hiển thị trạng thái sẵn sàng lắng nghe.
 
 ---

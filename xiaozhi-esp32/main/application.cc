@@ -65,6 +65,14 @@ void Application::Initialize() {
     // Setup the display
     auto display = board.GetDisplay();
     display->SetupUI();
+
+    // Apply assets from partition to load custom emojis immediately
+    auto& assets = Assets::GetInstance();
+    if (assets.partition_valid()) {
+        assets.Apply(false);
+    }
+    display->SetEmotion("neutral");
+
     // Print board name/version info
     display->SetChatMessage("system", SystemInfo::GetUserAgent().c_str());
 

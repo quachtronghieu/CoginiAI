@@ -214,3 +214,20 @@ def test_hotword_sequence_with_nonrepetitive_prefix_is_rejected():
     text = "Cà Mau Cà Mau " + "Hà Nội Huế Đà Nẵng Khánh Hòa " * 8
     assert repetitive_transcript(text)
     assert not _candidate(text).valid
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "tôi muốn ăn chân gà sả tất",
+        "tôi muốn ăn chân gà sả tắc",
+        "mình muốn ăn bánh xèo củ hũ dừa Cần Thơ",
+        "mình thèm ăn tokbokki bánh gạo cay",
+    ],
+)
+def test_specific_dish_desire_is_not_treated_as_open_recommendation(text):
+    profile = CustomerProfile()
+    reply, resolved = prepare_turn(profile, text, "vi")
+    assert reply is None
+    assert resolved == text
+    assert not profile.allergy_question_asked

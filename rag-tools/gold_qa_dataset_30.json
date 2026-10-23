@@ -1,0 +1,272 @@
+[
+  {
+    "id": "QA_01",
+    "category": "specific_dish_desire_asr_typo",
+    "user_query": "tôi muốn ăn chân gà sả tất",
+    "reference_source": "cogniai-curated://vi/chan-ga-sa-tac",
+    "expected_answer": "Chân gà sả tắc là món ăn vặt rất được yêu thích, bán phổ biến tại các quán ăn vặt đường phố, chợ đêm, quán ốc và các bếp online khắp Việt Nam. Nguyên liệu chính gồm chân gà tươi luộc cùng sả, gừng rồi ngâm đá lạnh cho trắng giòn, sau đó ngâm nước mắm giấm đường đun nguội với sả, tắc (quất), ớt tươi, tỏi và lá chanh. Món ăn cực kỳ ngon miệng nhờ chân gà giòn sần sật, thấm vị chua thanh của tắc, thơm nồng sả lá chanh và cay mặn ngọt đậm đà không ngấy, rất hợp chấm sốt tắc sữa đặc.",
+    "must_include_keywords": ["chân gà", "sả", "tắc", "giòn"],
+    "must_not_include_keywords": ["bạn có dị ứng với thành phần nào không"]
+  },
+  {
+    "id": "QA_02",
+    "category": "specific_dish_desire",
+    "user_query": "tôi muốn ăn chân gà sả tắc",
+    "reference_source": "cogniai-curated://vi/chan-ga-sa-tac",
+    "expected_answer": "Chân gà sả tắc là món ăn vặt rất được yêu thích, bán phổ biến tại các quán ăn vặt đường phố, chợ đêm, quán ốc và các bếp online khắp Việt Nam. Nguyên liệu chính gồm chân gà tươi luộc cùng sả, gừng rồi ngâm đá lạnh cho trắng giòn, sau đó ngâm nước mắm giấm đường đun nguội với sả, tắc (quất), ớt tươi, tỏi và lá chanh. Món ăn cực kỳ ngon miệng nhờ chân gà giòn sần sật, thấm vị chua thanh của tắc, thơm nồng sả lá chanh và cay mặn ngọt đậm đà không ngấy, rất hợp chấm sốt tắc sữa đặc.",
+    "must_include_keywords": ["chân gà", "sả", "tắc", "giòn"],
+    "must_not_include_keywords": ["bạn có dị ứng với thành phần nào không"]
+  },
+  {
+    "id": "QA_03",
+    "category": "specific_dish_desire",
+    "user_query": "tôi muốn ăn bánh xèo củ hũ dừa Cần Thơ",
+    "reference_source": "https://tasteofvietnam.vn/banh-xeo-cu-hu-dua-binh-dan-tai-can-tho.html#banh-xeo-cu-hu-dua",
+    "expected_answer": "Bánh xèo củ hũ dừa là món bánh xèo trứ danh tại Cần Thơ, nổi tiếng nhất ở quán Bảy Tới. Điểm đặc biệt là nhân bánh dùng củ hũ dừa giòn ngọt trộn cùng tôm sông, thịt heo thái chỉ, giá đỗ và đậu xanh thơm bùi, vỏ bánh chiên mỏng giòn vàng ruộm ăn kèm rau sống và nước mắm chua ngọt.",
+    "must_include_keywords": ["củ hũ dừa", "Cần Thơ", "tôm"],
+    "must_not_include_keywords": ["bạn có dị ứng với thành phần nào không"]
+  },
+  {
+    "id": "QA_04",
+    "category": "specific_dish_desire",
+    "user_query": "mình muốn ăn bún cá Kiên Giang",
+    "reference_source": "https://tasteofvietnam.vn/6-mon-co-nuoc-phai-thu-o-mien-tay.html#bun-ca-kien-giang",
+    "expected_answer": "Bún cá Kiên Giang là món bún nước đặc sản miền Tây có nước dùng ninh từ xương cá lóc và tôm khô ngọt thanh. Tô bún đầy đặn với thịt cá lóc tách xương xào sơ, tôm rim mặn ngọt, ăn kèm rau muống bào, bắp chuối, giá đỗ và nước mắm ớt chua cay.",
+    "must_include_keywords": ["Kiên Giang", "cá", "tôm"],
+    "must_not_include_keywords": ["bạn có dị ứng với thành phần nào không"]
+  },
+  {
+    "id": "QA_05",
+    "category": "specific_dish_desire",
+    "user_query": "tôi muốn ăn cút lộn xào me Sài Gòn",
+    "reference_source": "cogniai-curated://vi/cut-lon-xao-me-sai-gon",
+    "expected_answer": "Cút lộn xào me là món ăn vặt đường phố nổi tiếng ở Sài Gòn, bán nhiều tại xe đẩy, quán ốc và gần trường học. Trứng cút lộn luộc chín bóc vỏ xào sốt me chua ngọt cay từ nước cốt me, đường, nước mắm, tỏi phi, ăn kèm rau răm và đậu phộng rang béo bùi.",
+    "must_include_keywords": ["cút lộn", "me"],
+    "must_not_include_keywords": ["bạn có dị ứng với thành phần nào không"]
+  },
+  {
+    "id": "QA_06",
+    "category": "specific_dish_desire",
+    "user_query": "tôi muốn ăn bánh mì nướng muối ớt",
+    "reference_source": "cogniai-curated://vi/banh-mi-nuong-muoi-ot",
+    "expected_answer": "Bánh mì nướng muối ớt là món ăn vặt đường phố xuất phát từ miền Tây và rất phổ biến ở Sài Gòn, Hà Nội. Bánh mì ép dẹp phết bơ, sa tế, muối ớt nướng giòn, cắt miếng phủ chà bông, xúc xích, tép khô, mỡ hành cùng sốt mayonnaise và tương ớt cay mặn ngọt.",
+    "must_include_keywords": ["bánh mì", "muối ớt"],
+    "must_not_include_keywords": ["bạn có dị ứng với thành phần nào không"]
+  },
+  {
+    "id": "QA_07",
+    "category": "specific_dish_desire",
+    "user_query": "mình thèm ăn tokbokki bánh gạo cay",
+    "reference_source": "cogniai-curated://vi/tokbokki",
+    "expected_answer": "Tokbokki là món bánh gạo cay nguồn gốc Hàn Quốc rất được học sinh, sinh viên Việt Nam ưa chuộng tại các quán ăn Hàn và xe đẩy ăn vặt. Bánh gạo dẻo nấu trong sốt tương ớt gochujang cùng chả cá, xúc xích, trứng luộc hoặc phủ phô mai kéo sợi với vị cay ngọt đậm đà.",
+    "must_include_keywords": ["bánh gạo", "cay"],
+    "must_not_include_keywords": ["bạn có dị ứng với thành phần nào không"]
+  },
+  {
+    "id": "QA_08",
+    "category": "specific_dish_desire",
+    "user_query": "tôi muốn ăn phô mai que",
+    "reference_source": "cogniai-curated://vi/pho-mai-que",
+    "expected_answer": "Phô mai que là món ăn vặt chiên giòn quen thuộc ở cổng trường và quán ăn vặt. Thanh phô mai mozzarella được lăn qua bột mì, trứng gà và bột chiên xù rồi chiên ngập dầu vàng ruộm, bên ngoài giòn tan, bên trong phô mai tan chảy béo ngậy kéo sợi dài.",
+    "must_include_keywords": ["phô mai"],
+    "must_not_include_keywords": ["bạn có dị ứng với thành phần nào không"]
+  },
+  {
+    "id": "QA_09",
+    "category": "dish_characteristics_and_recipe",
+    "user_query": "Bún cá Long Xuyên có đặc điểm gì và nấu như thế nào?",
+    "reference_source": "https://tasteofvietnam.vn/6-mon-co-nuoc-phai-thu-o-mien-tay.html#bun-ca-long-xuyen",
+    "expected_answer": "Bún cá Long Xuyên có nguồn gốc từ An Giang, nổi bật với màu vàng nhẹ và vị béo thơm từ nghệ tươi. Nước lèo nấu từ xương heo và xương cá lóc với sả, nghệ, thịt cá lóc luộc gỡ xương xào nghệ vàng óng, ăn kèm rau muống bào, bắp chuối và bông điên điển.",
+    "must_include_keywords": ["Long Xuyên", "cá", "nghệ"],
+    "must_not_include_keywords": ["bạn có dị ứng"]
+  },
+  {
+    "id": "QA_10",
+    "category": "dish_characteristics_and_recipe",
+    "user_query": "Bánh canh hến nước cốt dừa có nguồn gốc ở đâu và hương vị ra sao?",
+    "reference_source": "https://tasteofvietnam.vn/6-mon-co-nuoc-phai-thu-o-mien-tay.html#banh-canh-hen-nuoc-cot-dua",
+    "expected_answer": "Bánh canh hến nước cốt dừa có nguồn gốc từ vùng Vĩnh Long (Bến Tre cũ), sử dụng hến đánh bắt từ sông Cổ Chiên nấu cùng nước dùng pha nước cốt dừa. Thịt hến giòn ngọt tự nhiên hòa quyện với sợi bánh canh bột gạo mềm dai và nước lèo sánh mịn, béo bùi.",
+    "must_include_keywords": ["hến", "nước cốt dừa", "Cổ Chiên"],
+    "must_not_include_keywords": ["bạn có dị ứng"]
+  },
+  {
+    "id": "QA_11",
+    "category": "dish_characteristics_and_recipe",
+    "user_query": "Canh khổ qua nhồi thịt Nam Bộ có ý nghĩa gì và nấu như thế nào?",
+    "reference_source": "https://tasteofvietnam.vn/9-mon-ngon-dac-trung-nam-bo.html#canh-kho-qua-nhoi-thit",
+    "expected_answer": "Canh khổ qua nhồi thịt là món truyền thống ngày Tết của người Nam Bộ với mong muốn mọi nỗi vất vả, cơ cực qua đi để đón may mắn. Trái khổ qua móc ruột nhồi thịt nạc vai xay trộn mộc nhĩ, hành tím, tiêu xay rồi hầm lửa nhỏ cho nước trong, giữ vị đắng dịu và ngọt béo.",
+    "must_include_keywords": ["khổ qua", "thịt"],
+    "must_not_include_keywords": ["bạn có dị ứng"]
+  },
+  {
+    "id": "QA_12",
+    "category": "dish_characteristics_and_recipe",
+    "user_query": "Cách làm món thịt nướng kim tiền ngày Tết như thế nào?",
+    "reference_source": "https://tasteofvietnam.vn/tong-hop-20-cac-mon-dai-khach-ngay-tet-don-gian-de-lam-hap-dan.html#thit-nuong-kim-tien",
+    "expected_answer": "Thịt nướng kim tiền làm từ thịt nạc heo hoặc bò thái mỏng ướp mật ong, nước tương, dầu hào, tỏi và ngũ vị hương, cuộn nhân mỡ khổ ướp đường hoặc lạp xưởng ở giữa như hình đồng tiền cổ rồi xiên que nướng vàng óng.",
+    "must_include_keywords": ["đồng tiền", "thịt"],
+    "must_not_include_keywords": ["bạn có dị ứng"]
+  },
+  {
+    "id": "QA_13",
+    "category": "dish_characteristics_and_recipe",
+    "user_query": "Món tôm kho tàu miền Tây có đặc điểm gì hấp dẫn?",
+    "reference_source": "https://tasteofvietnam.vn/9-mon-ngon-dac-trung-nam-bo.html#tom-kho-tau",
+    "expected_answer": "Tôm kho tàu miền Tây hấp dẫn bởi màu đỏ cam óng ánh từ gạch tôm tự nhiên, thịt tôm săn chắc ngọt thanh quyện cùng nước sốt kho nước dừa tươi mặn ngọt sánh sệt, ăn cùng cơm trắng nóng rất bắt cơm.",
+    "must_include_keywords": ["tôm", "gạch"],
+    "must_not_include_keywords": ["bạn có dị ứng"]
+  },
+  {
+    "id": "QA_14",
+    "category": "dish_characteristics_and_recipe",
+    "user_query": "Giò thủ (giò xào) được làm từ những nguyên liệu gì?",
+    "reference_source": "https://tasteofvietnam.vn/tong-hop-20-cac-mon-dai-khach-ngay-tet-don-gian-de-lam-hap-dan.html#gio-thu",
+    "expected_answer": "Giò thủ (giò xào) được làm từ các phần thịt thủ heo gồm tai heo, mũi heo, lưỡi heo, má heo kết hợp cùng mộc nhĩ, nấm hương, nước mắm và hạt tiêu bắc cay nồng, xào tiết keo rồi ép chặt giòn sần sật.",
+    "must_include_keywords": ["tai heo", "mộc nhĩ"],
+    "must_not_include_keywords": ["bạn có dị ứng"]
+  },
+  {
+    "id": "QA_15",
+    "category": "dish_characteristics_and_recipe",
+    "user_query": "Gỏi xoài tôm thịt gồm những nguyên liệu nào và vị ra sao?",
+    "reference_source": "https://tasteofvietnam.vn/tong-hop-20-cac-mon-dai-khach-ngay-tet-don-gian-de-lam-hap-dan.html#goi-xoai-tom-thit",
+    "expected_answer": "Gỏi xoài tôm thịt kết hợp xoài xanh bào sợi giòn, tôm luộc và thịt ba chỉ thái mỏng trộn cùng nước mắm chanh đường tỏi ớt chua ngọt, rau răm, húng quế, đậu phộng rang và hành phi, mang hương vị tươi mát kích thích vị giác.",
+    "must_include_keywords": ["xoài", "tôm", "thịt"],
+    "must_not_include_keywords": ["bạn có dị ứng"]
+  },
+  {
+    "id": "QA_16",
+    "category": "dish_characteristics_and_recipe",
+    "user_query": "Bạc xỉu Sài Gòn là thức uống gì và có hương vị thế nào?",
+    "reference_source": "cogniai-curated://vi/bac-xiu-sai-gon",
+    "expected_answer": "Bạc xỉu là thức uống cà phê pha nhiều sữa đặc và sữa tươi với một lượng nhỏ cà phê phin có nguồn gốc từ cộng đồng người Hoa ở Sài Gòn, mang vị ngọt béo của sữa hòa quyện hương cà phê nhẹ nhàng, ít đắng.",
+    "must_include_keywords": ["sữa", "cà phê"],
+    "must_not_include_keywords": ["bạn có dị ứng"]
+  },
+  {
+    "id": "QA_17",
+    "category": "kids_nutrition_and_health",
+    "user_query": "Cách nấu cháo móng giò hạt sen cho bé lười ăn như thế nào?",
+    "reference_source": "https://tasteofvietnam.vn/cach-nau-30-mon-ngon-cho-be-luoi-an-don-gian-de-lam-cho-me.html#chao-mong-gio-hat-sen",
+    "expected_answer": "Cháo móng giò hạt sen nấu bằng cách băm nhỏ thịt móng giò heo xào thơm với hành khô, hạt sen bỏ tâm luộc mềm tán nhuyễn, sau đó cho vào nồi cháo trắng ninh nhừ lửa nhỏ cho sánh quyện, giúp bé ngủ ngon và tăng cân.",
+    "must_include_keywords": ["móng giò", "hạt sen"],
+    "must_not_include_keywords": ["bạn có dị ứng"]
+  },
+  {
+    "id": "QA_18",
+    "category": "kids_nutrition_and_health",
+    "user_query": "Súp sữa bí đỏ cho trẻ biếng ăn có tác dụng gì và làm sao?",
+    "reference_source": "https://tasteofvietnam.vn/cach-nau-30-mon-ngon-cho-be-luoi-an-don-gian-de-lam-cho-me.html#sup-sua-bi-do",
+    "expected_answer": "Súp sữa bí đỏ cung cấp nhiều vitamin A và chất xơ, kích thích vị giác cho trẻ lười ăn nhờ vị ngọt bùi của bí đỏ hấp chín nghiền mịn khuấy đều trên lửa nhỏ cùng sữa mẹ hoặc sữa công thức đến khi sánh mịn.",
+    "must_include_keywords": ["bí đỏ", "sữa"],
+    "must_not_include_keywords": ["bạn có dị ứng"]
+  },
+  {
+    "id": "QA_19",
+    "category": "kids_nutrition_and_health",
+    "user_query": "Trứng cút bọc rau củ chiên xù cho bé làm như thế nào?",
+    "reference_source": "https://tasteofvietnam.vn/cach-nau-30-mon-ngon-cho-be-luoi-an-don-gian-de-lam-cho-me.html#trung-cut-boc-rau-cu",
+    "expected_answer": "Món ăn dùng khoai tây hấp nghiền nhuyễn trộn cà rốt, nấm đông cô và hành tây xào thơm để bọc kín quả trứng cút luộc, sau đó lăn qua trứng gà và bột chiên xù rồi chiên vàng giòn rụm.",
+    "must_include_keywords": ["trứng cút", "khoai tây"],
+    "must_not_include_keywords": ["bạn có dị ứng"]
+  },
+  {
+    "id": "QA_20",
+    "category": "kids_nutrition_and_health",
+    "user_query": "Cháo trứng gà thịt bò nấm hương cho bé nấu như thế nào?",
+    "reference_source": "https://tasteofvietnam.vn/cach-nau-30-mon-ngon-cho-be-luoi-an-don-gian-de-lam-cho-me.html#chao-trung-ga-thit-bo-nam-huong",
+    "expected_answer": "Thịt bò băm nhỏ xào săn thơm cùng nấm hương và hành lá băm nhuyễn rồi cho vào cháo trắng ninh nhừ, khi cháo sôi lăn tăn thì cho lòng đỏ trứng gà vào khuấy nhanh tay cho chín mềm mịn, giúp bổ máu và giàu đạm cho bé.",
+    "must_include_keywords": ["thịt bò", "nấm hương", "trứng"],
+    "must_not_include_keywords": ["bạn có dị ứng"]
+  },
+  {
+    "id": "QA_21",
+    "category": "kids_nutrition_and_health",
+    "user_query": "1 chiếc bánh dày bao nhiêu calo?",
+    "reference_source": "https://tasteofvietnam.vn/1-chiec-banh-day-bao-nhieu-calo.html",
+    "expected_answer": "Tùy thuộc vào kích cỡ và nhân bánh, một chiếc bánh dày giò cung cấp khoảng 180 đến 200 calo, còn bánh dày ngọt chứa khoảng 205 calo trên 100g.",
+    "must_include_keywords": ["calo"],
+    "must_not_include_keywords": ["bạn có dị ứng"]
+  },
+  {
+    "id": "QA_22",
+    "category": "kids_nutrition_and_health",
+    "user_query": "Chè hột gà trà tàu có hương vị và công dụng gì?",
+    "reference_source": "https://tasteofvietnam.vn/tong-hop-20-cac-mon-dai-khach-ngay-tet-don-gian-de-lam-hap-dan.html#che-hot-ga-tra-tau",
+    "expected_answer": "Chè hột gà trà tàu là món tráng miệng bổ dưỡng có hương thơm thoang thoảng của trà tàu, vị ngọt thanh của đường phèn và trứng gà ninh dẻo bùi màu nâu cánh gián, giúp an thần và bồi bổ sức khỏe.",
+    "must_include_keywords": ["trà", "đường phèn"],
+    "must_not_include_keywords": ["bạn có dị ứng"]
+  },
+  {
+    "id": "QA_23",
+    "category": "regional_and_specialty",
+    "user_query": "Nộm bò khô Hà Nội có nguyên liệu và hương vị gì đặc trưng?",
+    "reference_source": "cogniai-curated://vi/nom-bo-kho-ha-noi",
+    "expected_answer": "Nộm bò khô Hà Nội gồm đu đủ xanh và cà rốt bào sợi giòn trộn với thịt bò khô, gan sấy, mề quay, rau kinh giới, húng, lạc rang và nước mắm chua ngọt cay thanh mát.",
+    "must_include_keywords": ["đu đủ", "bò khô"],
+    "must_not_include_keywords": ["bạn có dị ứng"]
+  },
+  {
+    "id": "QA_24",
+    "category": "regional_and_specialty",
+    "user_query": "Cua sốt ớt Singapore có đặc điểm và cách ăn như thế nào?",
+    "reference_source": "https://tasteofvietnam.vn/tong-hop-20-cac-mon-dai-khach-ngay-tet-don-gian-de-lam-hap-dan.html#cua-sot-ot-singapore",
+    "expected_answer": "Cua sốt ớt Singapore hấp dẫn với thịt cua biển ngọt chắc ngập trong sốt tương ớt, tương cà, gừng tỏi chua cay mặn ngọt quyện vân trứng gà sánh mịn, thường ăn kèm bánh mì nóng giòn hoặc màn thầu chiên.",
+    "must_include_keywords": ["cua", "sốt"],
+    "must_not_include_keywords": ["bạn có dị ứng"]
+  },
+  {
+    "id": "QA_25",
+    "category": "regional_and_specialty",
+    "user_query": "Tôm khô củ kiệu ngày Tết có ý nghĩa và cách làm ra sao?",
+    "reference_source": "https://tasteofvietnam.vn/tong-hop-20-cac-mon-dai-khach-ngay-tet-don-gian-de-lam-hap-dan.html#tom-kho-cu-kieu",
+    "expected_answer": "Tôm khô củ kiệu là món khai vị truyền thống đãi khách ngày Tết ở miền Nam tượng trưng cho sự gắn kết và may mắn, kết hợp tôm khô ngâm mềm ngọt bùi với củ kiệu chua ngọt giòn cay nồng.",
+    "must_include_keywords": ["tôm khô", "củ kiệu"],
+    "must_not_include_keywords": ["bạn có dị ứng"]
+  },
+  {
+    "id": "QA_26",
+    "category": "anti_hallucination_unverified_detail",
+    "user_query": "Quán bánh xèo Bảy Tới ở Cần Thơ mở cửa lúc mấy giờ và giá bao nhiêu tiền?",
+    "reference_source": "none",
+    "expected_answer": "Kho dữ liệu hiện chưa có đủ thông tin để trả lời câu hỏi này.",
+    "must_include_keywords": ["chưa có đủ thông tin"],
+    "must_not_include_keywords": ["7 giờ", "8 giờ", "30.000", "50.000"]
+  },
+  {
+    "id": "QA_27",
+    "category": "anti_hallucination_unverified_price",
+    "user_query": "Một tô bún cá Long Xuyên hiện nay bán giá bao nhiêu tiền?",
+    "reference_source": "none",
+    "expected_answer": "Kho dữ liệu hiện chưa có đủ thông tin để trả lời câu hỏi này.",
+    "must_include_keywords": ["chưa có đủ thông tin"],
+    "must_not_include_keywords": ["35.000", "40.000", "50.000"]
+  },
+  {
+    "id": "QA_28",
+    "category": "anti_hallucination_nonexistent_dish",
+    "user_query": "Cách làm món lẩu cá hồi phô mai kiểu Pháp ở Đà Lạt như thế nào?",
+    "reference_source": "none",
+    "expected_answer": "Kho dữ liệu hiện chưa có đủ thông tin để trả lời câu hỏi này.",
+    "must_include_keywords": ["chưa có đủ thông tin"],
+    "must_not_include_keywords": ["cá hồi tươi", "phô mai Pháp"]
+  },
+  {
+    "id": "QA_29",
+    "category": "out_of_domain_refusal",
+    "user_query": "Hôm nay giá vàng và thời tiết ở Hà Nội thế nào?",
+    "reference_source": "none",
+    "expected_answer": "Mình chỉ trả lời những nội dung liên quan đến ẩm thực, món ăn và ăn uống. Bạn cần tư vấn món gì?",
+    "must_include_keywords": ["ẩm thực", "món"],
+    "must_not_include_keywords": ["độ C", "lượng vàng"]
+  },
+  {
+    "id": "QA_30",
+    "category": "out_of_domain_refusal",
+    "user_query": "Hãy viết code Python giải phương trình bậc hai giúp tôi",
+    "reference_source": "none",
+    "expected_answer": "Mình chỉ trả lời những nội dung liên quan đến ẩm thực, món ăn và ăn uống. Bạn cần tư vấn món gì?",
+    "must_include_keywords": ["ẩm thực", "món"],
+    "must_not_include_keywords": ["import math", "def "]
+  }
+]

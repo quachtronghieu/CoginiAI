@@ -32,12 +32,16 @@ def _sentences(content: str) -> list[str]:
     for paragraph in re.split(r"\n\s*\n", content):
         for line in paragraph.splitlines():
             line = line.strip().lstrip("+ ")
-            if re.match(r"^(?:Xem |Xem thêm|Xem nhanh|>>>|Ảnh:|Địa chỉ:|Giờ mở cửa:|Cận cảnh|\d+\S*[^.!?]*$)", line, re.I):
+            if re.match(r"^(?:Xem |Xem thêm|Xem nhanh|>>>|Ảnh:|Địa chỉ:|Giờ mở cửa:|Cận cảnh|Món:|Danh mục:|Nguồn(?: tham chiếu)?:|\d+\S*[^.!?]*$)", line, re.I):
                 continue
             for span in re.split(r"\((?:Ảnh|Nguồn):[^)]*\)|Ảnh:", line):
+                span = span.strip()
+                if bool(re.search(r"^Món:\s|^Giới thiệu|^Đặc điểm", content, re.M)) and 20 <= len(span) <= 380 and re.search(r"[.!]", span) and not span.endswith("?") and not re.match(r"^(?:Món:|Danh mục:|Nguồn(?: tham chiếu)?:|Đây là món ăn phổ biến tại Việt Nam)", span, re.I):
+                    result.append(span)
+                    continue
                 for sentence in re.split(r"(?<=[.!?])\s+(?=[A-ZÀ-ỸĐ])", span):
                     sentence = sentence.strip()
-                    if 20 <= len(sentence) <= 650 and re.search(r"[.!]", sentence) and not sentence.endswith("?"):
+                    if not re.match(r"^(?:Món:|Danh mục:|Nguồn(?: tham chiếu)?:|Đây là món ăn phổ biến tại Việt Nam)", sentence, re.I) and 20 <= len(sentence) <= 650 and re.search(r"[.!]", sentence) and not sentence.endswith("?"):
                         result.append(sentence)
     return result
 
@@ -82,14 +86,14 @@ def evidence_passages(matches: list[RagMatch], region: str = "", recommendation:
             evidence.append(Evidence(match.source, match.title, sentence))
     normalized_question = _normalized(question)
     topic_question = question.casefold()
-    if any(phrase in normalized_question for phrase in ("nguon goc", "xuat xu", "origin")):
-        evidence = [item for item in evidence if re.search(r"xuất xứ|bắt nguồn|có từ đâu|ra đời|originat", item.text, re.I)]
-    elif re.search(r"thành phần|nguyên liệu|ingredients?", topic_question, re.I):
+    if any(phrase in normalized_question for phrase in ("nguon goc", "xuat xu", "origin")) and not any(phrase in normalized_question for phrase in ("huong vi", "dac diem", "cach lam", "cach nau", "nguyen lieu")):
+        evidence = [item for item in evidence if re.search(r"nguồn gốc|xuất xứ|bắt nguồn|có từ đâu|ra đời|originat", item.text, re.I)]
+    elif re.search(r"thành phần|nguyên liệu|ingredients?", topic_question, re.I) and not any(phrase in normalized_question for phrase in ("huong vi", "dac diem", "cach lam", "cach nau")):
         evidence = [
             item for item in evidence
             if INGREDIENT_EVIDENCE.search(item.text)
         ]
-    elif re.search(r"cách ăn|ăn như thế nào|thưởng thức|how to eat", topic_question, re.I):
+    elif re.search(r"cách ăn|(?<!lười )(?<!biếng )ăn như thế nào|thưởng thức|how to eat", topic_question, re.I) and not any(phrase in normalized_question for phrase in ("dac diem", "huong vi", "nguyen lieu", "cach lam", "cach nau")):
         evidence = [
             item for item in evidence
             if re.search(r"cách ăn|thưởng thức|ăn kèm|dùng kèm|chấm|khi ăn|ăn nóng|ăn nguội", item.text, re.I)
@@ -97,7 +101,7 @@ def evidence_passages(matches: list[RagMatch], region: str = "", recommendation:
     elif re.search(r"giá|bao nhiêu tiền|price|cost", topic_question, re.I):
         evidence = [
             item for item in evidence
-            if re.search(r"giá|đồng|vnđ|vnd|khoảng|từ \d|\d+[.,]?\d*\s*(?:nghìn|triệu)", item.text, re.I)
+            if re.search(r"(?:giá|khoảng|từ)\b[^.!?]*\d|\d+[.,]?\d*\s*(?:đồng|vnđ|vnd|nghìn|ngàn|triệu)", item.text, re.I)
         ]
     elif re.search(r"dị ứng|allergen|allergy", topic_question, re.I):
         # Ingredient evidence is necessary, but never sufficient to claim

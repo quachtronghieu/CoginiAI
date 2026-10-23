@@ -80,14 +80,40 @@ class Settings:
     max_audio_bytes: int
     auto_stop_timeout_seconds: float
     hello_timeout_seconds: float
-    asr_hotwords: str = "đậu phộng, lạc, trứng, sữa, tôm, cua, hải sản, dị ứng, đúng rồi, không đúng, Cà Mau, Cần Thơ, Nha Trang, Hải Phòng, Hà Nội, Huế, Đà Nẵng, Khánh Hòa, thành phố Hồ Chí Minh, phở chua, bánh tầm cay"
+    asr_hotwords: str = (
+        "xin chào, chào bạn, cảm ơn, tạm biệt, đúng rồi, chính xác, không đúng, sai rồi, đồng ý, lặp lại, "
+        "tư vấn món, gợi ý món, ăn sáng, ăn trưa, ăn tối, ăn đêm, ăn vặt, món ngon, đặc sản, hương vị, nguyên liệu, "
+        "gia vị, cách nấu, công thức, thực đơn, nhà hàng, quán ăn, dị ứng, dị ứng thực phẩm, dị ứng hải sản, "
+        "dị ứng đậu phộng, dị ứng sữa, dị ứng trứng, không ăn được, kiêng khem, không chứa, không có, hải sản có vỏ, "
+        "hạt cây, đậu phộng, lạc, trứng gà, trứng vịt, trứng cút, sữa tươi, phô mai, bơ sữa, tôm sú, tôm hùm, cua đồng, "
+        "cua biển, cua Cà Mau, ghẹ rang me, cá lóc, cá kèo, cá hồi, cá bớp, mực nướng sa tế, bạch tuộc, nghêu hấp sả, "
+        "sò huyết, ốc móng tay, hàu nướng mỡ hành, thịt bò, thịt heo, thịt gà, thịt vịt, thịt dê, sườn nướng, "
+        "chân gà sả tắc, sả tắc, phở bò, phở gà, phở tái, phở nạm, phở gầu, phở sốt vang, phở cuốn, phở chua, "
+        "bún chả, bún thang, bún riêu cua, bún ốc, bún đậu mắm tôm, bún cá rô, bún mọc, bún bò Huế, bún mắm, "
+        "bún kèn, bún chả cá, bún thịt nướng, bún bì, cơm tấm, cơm tấm sườn bì chả, cơm lam, cơm gà Tam Kỳ, "
+        "cơm gà Hội An, cơm hến, bánh mì kẹp thịt, bánh mì chảo, bánh mì cay, bánh xèo, bánh xèo củ hũ dừa, "
+        "bánh khọt, bánh cuốn, bánh bèo, bánh nậm, bánh bột lọc, bánh tét, bánh chưng, bánh pía, bánh tầm cay, "
+        "bánh tầm bì, bánh đa cua, bánh canh ghẹ, bánh canh chả cá, bánh canh cá lóc, hủ tiếu Nam Vang, "
+        "hủ tiếu Sa Đéc, hủ tiếu Mỹ Tho, mì Quảng, cao lầu, miến lươn, miến măng gà, cháo lòng, cháo sườn, "
+        "cháo ếch, xôi xéo, xôi khúc, xôi vò, gỏi cuốn, nem rán, nem lụi, chả ram tôm đất, chả cá Lã Vọng, "
+        "chả mực Hạ Long, súp cua, lẩu thái, lẩu cua đồng, lẩu mắm, lẩu cá kèo, lẩu gà lá é, bò bít tết, bò kho, "
+        "bò né, bò sốt vang, chè bưởi, chè thái, cà phê sữa đá, bạc xỉu, trà tắc, trà sen, nước mắm, mắm tôm, "
+        "mắm nêm, mắm ruốc, củ hũ dừa, hoa chuối, rau răm, ngò gai, tía tô, lá é, bông điên điển, măng chua, sả, "
+        "gừng, tỏi, ớt hiểm, tiêu lốt, hạt dổi, mắc khén, Hà Nội, Hải Phòng, Quảng Ninh, Lạng Sơn, Sa Pa, "
+        "Lào Cai, Hà Giang, Cao Bằng, Ninh Bình, Thanh Hóa, Nghệ An, Hà Tĩnh, Huế, Đà Nẵng, Hội An, Quy Nhơn, "
+        "Quảng Nam, Bình Định, Phú Yên, Nha Trang, Khánh Hòa, Phan Thiết, Bình Thuận, Đà Lạt, Lâm Đồng, "
+        "Buôn Ma Thuột, Đắk Lắk, TP Hồ Chí Minh, Sài Gòn, Vũng Tàu, Tây Ninh, Đồng Nai, Bình Dương, Long An, "
+        "Tiền Giang, Mỹ Tho, Bến Tre, Đồng Tháp, Sa Đéc, Vĩnh Long, Trà Vinh, Cần Thơ, Hậu Giang, Sóc Trăng, "
+        "Bạc Liêu, Cà Mau, An Giang, Châu Đốc, Long Xuyên, Kiên Giang, Rạch Giá, Phú Quốc, "
+        "ở Đà Lạt, tại Đà Lạt, món ăn Đà Lạt, đặc sản Đà Lạt, ở Cà Mau, tại Cà Mau, món ăn Cà Mau, đặc sản Cà Mau"
+    )
     asr_min_rms: float = 0.0015
     asr_min_duration_seconds: float = 0.15
     diagnostics_enabled: bool = False
     diagnostics_slots: int = 24
-    rnnoise_asr_mode: str = "filtered"
-    vad_strong_speech_ms: int = 250
-    asr_no_speech_gate_probability: float = 0.60
+    rnnoise_asr_mode: str = "shadow"
+    vad_strong_speech_ms: int = 180
+    asr_no_speech_gate_probability: float = 0.70
     verified_menu_path: str = ""
     verified_menu_max_age_days: int = 30
 
@@ -101,7 +127,7 @@ def get_settings() -> Settings:
     tts_default_language = os.getenv("TTS_DEFAULT_LANGUAGE", "vi").lower().strip()
     if tts_default_language not in VALID_TTS_DEFAULT_LANGUAGES:
         raise ValueError("TTS_DEFAULT_LANGUAGE must be one of: en, vi")
-    rnnoise_asr_mode = os.getenv("RNNOISE_ASR_MODE", "filtered").lower().strip()
+    rnnoise_asr_mode = os.getenv("RNNOISE_ASR_MODE", "shadow").lower().strip()
     if rnnoise_asr_mode not in VALID_RNNOISE_ASR_MODES:
         raise ValueError("RNNOISE_ASR_MODE must be one of: filtered, raw, shadow")
 
@@ -116,7 +142,7 @@ def get_settings() -> Settings:
         frame_duration_ms=_positive_int("XIAOZHI_FRAME_DURATION_MS", 60),
         timezone_offset_minutes=int(os.getenv("TIMEZONE_OFFSET_MINUTES", "420")),
         asr_model=os.getenv("ASR_MODEL", "").strip(),
-        asr_language=os.getenv("ASR_LANGUAGE", "").strip(),
+        asr_language=os.getenv("ASR_LANGUAGE", "vi").strip(),
         asr_compute_type=os.getenv("ASR_COMPUTE_TYPE", "").strip(),
         asr_local_files_only=os.getenv("ASR_LOCAL_FILES_ONLY", "true").lower()
         in {"1", "true", "yes", "on"},
@@ -150,7 +176,7 @@ def get_settings() -> Settings:
         model_device=model_device,
         vad_enabled=os.getenv("VAD_ENABLED", "false").lower()
         in {"1", "true", "yes", "on"},
-        vad_threshold=float(os.getenv("VAD_THRESHOLD", "0.4")),
+        vad_threshold=float(os.getenv("VAD_THRESHOLD", "0.38")),
         vad_min_silence_ms=_positive_int("VAD_MIN_SILENCE_MS", 500),
         vad_speech_pad_ms=_positive_int("VAD_SPEECH_PAD_MS", 200),
         max_audio_seconds=_positive_int("MAX_AUDIO_SECONDS", 30),
@@ -163,10 +189,8 @@ def get_settings() -> Settings:
         diagnostics_enabled=os.getenv("VOICE_DIAGNOSTICS_ENABLED", "false").lower() in {"1", "true", "yes", "on"},
         diagnostics_slots=_positive_int("VOICE_DIAGNOSTICS_SLOTS", 24),
         rnnoise_asr_mode=rnnoise_asr_mode,
-        vad_strong_speech_ms=_positive_int("VAD_STRONG_SPEECH_MS", 250),
-        asr_no_speech_gate_probability=_probability(
-            "ASR_NO_SPEECH_GATE_PROBABILITY", 0.60
-        ),
+        vad_strong_speech_ms=_positive_int("VAD_STRONG_SPEECH_MS", 180),
+        asr_no_speech_gate_probability=_probability("ASR_NO_SPEECH_GATE_PROBABILITY", 0.70),
         verified_menu_path=os.getenv("VERIFIED_MENU_PATH", "").strip(),
         verified_menu_max_age_days=_positive_int("VERIFIED_MENU_MAX_AGE_DAYS", 30),
     )

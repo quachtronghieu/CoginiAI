@@ -13,7 +13,7 @@ ESP32 Opus 16 kHz -> PCM -> Silero VAD -> faster-whisper language detection
 Python `3.10 - 3.14` is supported on Windows. When moving or copying the project to a new machine, recreate or update `pyvenv.cfg` so the Python executable and paths match the new system.
 
 ```powershell
-cd D:\4\xiaozhi-team-source\xiaozhi-backend
+cd D:\coniAI\CoginiAI\xiaozhi-backend
 Remove-Item -Recurse -Force .venv
 python -m venv .venv
 .venv\Scripts\Activate.ps1
@@ -29,13 +29,13 @@ Model binaries and `.env` are ignored by Git.
 Set the backend LAN IP in `.env`. Never use `localhost` for an ESP32 connection.
 
 ```env
-PUBLIC_WS_URL=ws://192.168.1.217:8000/xiaozhi/v1/
+PUBLIC_WS_URL=ws://192.168.1.13:8000/xiaozhi/v1/
 ```
 
 Firmware OTA config must point to:
 
 ```text
-http://192.168.1.217:8000/xiaozhi/ota/
+http://192.168.1.13:8000/xiaozhi/ota/
 ```
 
 Endpoints:
@@ -79,11 +79,12 @@ ollama pull gemma3:4b
 ollama serve
 ```
 
-If the model is stored in this workspace's offline cache, start Ollama with
-that cache visible to the server:
+If the model is stored in a custom offline cache, start Ollama with
+that cache visible to the server (this machine uses the default store
+`$HOME\.ollama\models`, so this step is optional):
 
 ```powershell
-$env:OLLAMA_MODELS = "D:\CODE_ESP32S3\.ollama\models"
+$env:OLLAMA_MODELS = "$HOME\.ollama\models"
 $env:OLLAMA_HOST = "127.0.0.1:11434"
 ollama serve
 ```
@@ -115,12 +116,16 @@ loading Gemma alone does not establish voice-pipeline memory headroom.
 Build the curated SQLite index from the crawler's `articles_vietnam` directory:
 
 ```powershell
-cd D:\CODE_ESP32S3\src_new\xiaozhi-team-source
+cd D:\coniAI\CoginiAI
 py .\rag-tools\cuisine_rag.py build `
-  --data-dir C:\Users\Hieu\Downloads\cogniai-data\tasteofvietnam_data `
+  --data-dir <PATH_TO>\tasteofvietnam_data `
   --extra-data-dir .\rag-tools\supplemental `
   --database .\rag-tools\cuisine_v3.sqlite3
 ```
+
+> The original crawler data (`tasteofvietnam_data`) is not in this repository and
+> is not present on this machine. Copy it over and replace `<PATH_TO>` only if you
+> need to rebuild the index; the checked-in `rag-tools\cuisine_v3.sqlite3` works as is.
 
 The supplemental directory is populated only from the explicit, audited URL
 manifest. The crawler checks `robots.txt`, expected place names, dish names and
@@ -149,7 +154,7 @@ Configure the backend with an absolute database path:
 
 ```env
 RAG_ENABLED=true
-RAG_DB_PATH=D:\CODE_ESP32S3\src_new\xiaozhi-team-source\rag-tools\cuisine_v3.sqlite3
+RAG_DB_PATH=D:\coniAI\CoginiAI\rag-tools\cuisine_v3.sqlite3
 RAG_TOP_K=3
 RAG_STRICT=true
 ```
@@ -172,8 +177,8 @@ For mixed Vietnamese/English input, the configured LLM uses the dominant languag
 Download both Piper `.onnx` voices and matching `.onnx.json` configs manually. Keep them outside Git, then set absolute local paths:
 
 ```env
-TTS_MODEL_VI=D:\CODE_ESP32S3\xiaozhi-backend\models\piper\vi_VN-vais1000-medium.onnx
-TTS_MODEL_EN=D:\CODE_ESP32S3\xiaozhi-backend\models\piper\en_US-lessac-medium.onnx
+TTS_MODEL_VI=D:\coniAI\CoginiAI\xiaozhi-backend\models\piper\vi_VN-vais1000-medium.onnx
+TTS_MODEL_EN=D:\coniAI\CoginiAI\xiaozhi-backend\models\piper\en_US-lessac-medium.onnx
 TTS_DEFAULT_LANGUAGE=vi
 ```
 

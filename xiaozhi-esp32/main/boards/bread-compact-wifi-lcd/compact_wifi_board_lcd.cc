@@ -59,6 +59,10 @@ static const gc9a01_lcd_init_cmd_t gc9107_lcd_init_cmds[] = {
  
 #define TAG "CompactWifiBoardLCD"
 
+#ifndef DISPLAY_SPI_SCLK_HZ
+#define DISPLAY_SPI_SCLK_HZ (40 * 1000 * 1000)
+#endif
+
 class CompactWifiBoardLCD : public WifiBoard {
 private:
  
@@ -85,7 +89,7 @@ private:
         io_config.cs_gpio_num = DISPLAY_CS_PIN;
         io_config.dc_gpio_num = DISPLAY_DC_PIN;
         io_config.spi_mode = DISPLAY_SPI_MODE;
-        io_config.pclk_hz = 40 * 1000 * 1000;
+        io_config.pclk_hz = DISPLAY_SPI_SCLK_HZ;
         io_config.trans_queue_depth = 10;
         io_config.lcd_cmd_bits = 8;
         io_config.lcd_param_bits = 8;

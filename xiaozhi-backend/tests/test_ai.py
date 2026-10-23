@@ -486,3 +486,75 @@ def test_tts_routes_from_answer_language_and_safe_fallback(tmp_path) -> None:
     assert service.select_language("toi co the giup ban", "en", 0.99) == "vi"
     assert service.select_language("12345", "fr") == "vi"
     assert service.select_language("12345", "en", 0.79) == "vi"
+
+def test_edge_tts_falls_back_to_piper_on_error(tmp_path, monkeypatch):
+    from app.tts import EdgeTtsService
+
+    vi_model = tmp_path / "vi.onnx"
+    vi_model.write_bytes(b"vi")
+    (tmp_path / "vi.onnx.json").write_text("{}")
+    settings = replace(
+        get_settings(),
+        tts_model_vi=str(vi_model),
+        tts_default_language="vi",
+    )
+    service = EdgeTtsService(settings)
+
+    class MockPiper:
+        def available(self):
+            return True
+        async def synthesize(self, text, language, language_probability):
+            return PcmAudio(b"\x00\x00" * 120, 24000)
+
+    service._piper_fallback = MockPiper()
+
+    # Simulate edge_tts raising NoAudioReceived
+    def mock_stream():
+        raise RuntimeError("No audio was received")
+
+    class MockCommunicate:
+        def __init__(self, *args, **kwargs):
+            pass
+        async def stream(self):
+            raise RuntimeError("No audio was received")
+            yield {}
+
+    import edge_tts
+    monkeypatch.setattr(edge_tts, "Communicate", MockCommunicate)
+
+    result = asyncio.run(service.synthesize("Món ngon Cà Mau", "vi"))
+    assert result.sample_rate == 24000
+    assert len(result.data) == 240
+
+
+def test_clean_speech_text_normalizes_currency_and_pauses() -> None:
+    from app.tts import clean_speech_text
+    raw = "Lẩu gà lá é; giá 200.000 VNĐ. Bánh ướt: giá 40.000 VND (ghi chú)."
+    cleaned = clean_speech_text(raw)
+    assert "200 nghìn đồng" in cleaned
+    assert "40 nghìn đồng" in cleaned
+    assert ";" not in cleaned
+    assert ":" not in cleaned
+    assert "(" not in cleaned and ")" not in cleaned
+
+
+def test_piper_synthesizes_multiple_sentences_with_silence() -> None:
+    from app.tts import PiperTtsService
+    from collections import namedtuple
+    settings = get_settings()
+    service = PiperTtsService(settings)
+
+    AudioChunk = namedtuple("AudioChunk", ["audio_int16_bytes"])
+    Config = namedtuple("Config", ["sample_rate"])
+
+    class StreamingVoice:
+        config = Config(sample_rate=22050)
+        def synthesize(self, text, syn_config=None):
+            return [AudioChunk(b"\x01\x01" * 100), AudioChunk(b"\x02\x02" * 100)]
+
+    service._voices["legacy"] = StreamingVoice()
+    audio = asyncio.run(service.synthesize("Câu một. Câu hai.", "vi", 0.95))
+    assert audio.sample_rate == 22050
+    # Expected: 200 samples chunk 1 + silence samples (22050 * 0.25 = 5512 samples) + 200 samples chunk 2
+    assert len(audio.data) > 400
+

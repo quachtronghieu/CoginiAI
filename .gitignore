@@ -29,6 +29,7 @@ logs/
 
 # ESP-IDF generated output and local configuration
 xiaozhi-esp32/build/
+xiaozhi-esp32/build_assets/output/
 xiaozhi-esp32/managed_components/
 xiaozhi-esp32/sdkconfig
 xiaozhi-esp32/sdkconfig.old

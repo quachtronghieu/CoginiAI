@@ -56,7 +56,7 @@ class VerifiedMenuService:
             if profile.allergens_in_text(ingredients):
                 continue
             normalized = _normalized(question)
-            if any(phrase in normalized for phrase in ("an sang", "bua sang", "breakfast")) and "breakfast" not in item["meal_types"]:
+            if any(phrase in normalized for phrase in ("an sang", "bua sang", "buoi sang", "breakfast")) and "breakfast" not in item["meal_types"]:
                 continue
             if "an chay" in normalized and "vegetarian" not in item["dietary_tags"]:
                 continue
@@ -78,12 +78,13 @@ class VerifiedMenuService:
     def spoken_answer(items: list[dict], profile: CustomerProfile, language: str) -> str:
         descriptions = []
         for item in items:
-            ingredients = ", ".join(item["ingredients"])
+            ingredients = ", ".join(item["ingredients"][:4]) if item.get("ingredients") else ""
+            ing_text = f", thành phần gồm {ingredients}" if ingredients else ""
             price = f"{item['price_vnd']:,}".replace(",", ".") + " VNĐ" if item.get("price_vnd") else ("ask staff for price" if language == "en" else "cần hỏi giá nhân viên")
             if language == "en":
                 descriptions.append(f"{item['name']}: ingredients {ingredients}; recorded price {price}.")
             else:
-                descriptions.append(f"{item['name']}, thành phần gồm {ingredients}; giá ghi trong thực đơn {price}.")
+                descriptions.append(f"{item['name']}{ing_text}; giá ghi trong thực đơn {price}.")
         if language == "en":
-            return f"Based on the staff-verified menu, these dishes do not list your confirmed allergens ({profile.spoken_allergens()}) or related cross-contact warnings: " + " ".join(descriptions) + " This is not a guarantee of safety; please confirm ingredients, cross-contact and current availability with staff before ordering."
-        return f"Theo thực đơn được nhân viên xác thực, các món sau không ghi nhận thành phần dị ứng đã xác nhận của bạn ({profile.spoken_allergens()}) và không có cảnh báo nhiễm chéo liên quan: " + " ".join(descriptions) + " Đây không phải cam kết an toàn tuyệt đối; trước khi gọi món, hãy xác nhận lại thành phần, nhiễm chéo và tình trạng còn món với nhân viên."
+            return f"Based on the staff-verified menu, these dishes do not list your confirmed allergens ({profile.spoken_allergens()}): " + " ".join(descriptions) + " This is not a guarantee of safety; please confirm ingredients and current availability with staff before ordering."
+        return f"Theo thực đơn được nhân viên xác thực, các món sau không ghi nhận thành phần dị ứng đã xác nhận của bạn ({profile.spoken_allergens()}): " + " ".join(descriptions) + " Đây không phải cam kết an toàn tuyệt đối; trước khi gọi món, hãy xác nhận lại thành phần và tình trạng còn món với nhân viên."
